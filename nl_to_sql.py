@@ -33,6 +33,7 @@ def generate_insight(question, df_data):
     prompt = f"""
     You are an AI data analyst. Briefly answer the user's business question based on the following data (which is the result of a database query answering their question). 
     Keep it strictly professional, concise (1-2 sentences), and directly address the user's question. 
+    Use Indian Rupees (₹) for any currency values.
     Do not mention SQL or the database, just analyze the data. Highlight the most important number or trend.
     
     Question: {question}

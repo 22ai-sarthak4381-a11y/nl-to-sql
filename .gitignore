@@ -1,3 +1,21 @@
-.builder/config/data.json
+# Environment variables
 .env
+
+# Python technical noise
 __pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+
+# IDE and System files
+.vscode/
+.idea/
+.DS_Store
+
+# Temporary/Log files
+*.txt
+.builder/
+.system_generated/
+.tempmediaStorage/
+browser/
