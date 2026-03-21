@@ -1,0 +1,1985 @@
+2026-03-21 15:09:40,613 - WARNING -  * Debugger is active!
+2026-03-21 15:09:40,613 - WARNING -  * Debugger is active!
+2026-03-21 15:09:40,617 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:09:40,617 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:09:50,347 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 15:09:54,630 - WARNING -  * Debugger is active!
+2026-03-21 15:09:54,631 - WARNING -  * Debugger is active!
+2026-03-21 15:09:54,636 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:09:54,636 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:10:02,921 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 15:10:07,041 - WARNING -  * Debugger is active!
+2026-03-21 15:10:07,041 - WARNING -  * Debugger is active!
+2026-03-21 15:10:07,050 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:10:07,050 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:11:11,353 - INFO - 127.0.0.1 - - [21/Mar/2026 15:11:11] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:11:11,616 - INFO - Incoming Request Query: Show total sales
+2026-03-21 15:11:11,618 - INFO - Semantic Layer applied. Enhanced query: Show total purchase_amount
+2026-03-21 15:11:12,589 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 15:11:12,628 - INFO - AI SQL Generation complete. Length: 61
+2026-03-21 15:11:12,632 - INFO - Generated SQL for execution: SELECT SUM(Purchase_Amount::NUMERIC)
+FROM ecommerce_behavior
+2026-03-21 15:11:14,069 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:11:14,072 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 15:11:14,080 - INFO - 127.0.0.1 - - [21/Mar/2026 15:11:14] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:11:47,122 - INFO - 127.0.0.1 - - [21/Mar/2026 15:11:47] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:11:47,429 - INFO - Incoming Request Query: Show items where price is negative
+2026-03-21 15:11:47,430 - INFO - Semantic Layer applied. Enhanced query: Show purchase_category where price is negative
+2026-03-21 15:11:48,382 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 15:11:48,384 - INFO - AI SQL Generation complete. Length: 102
+2026-03-21 15:11:48,388 - INFO - Generated SQL for execution: SELECT Purchase_Category
+FROM ecommerce_behavior
+WHERE Purchase_Amount ::FLOAT::NUMERIC < 0
+LIMIT 100
+2026-03-21 15:11:48,524 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:11:48,525 - INFO - Query executed successfully. Rows returned: 0
+2026-03-21 15:11:48,526 - WARNING - No results found for SQL: SELECT Purchase_Category
+FROM ecommerce_behavior
+WHERE Purchase_Amount ::FLOAT::NUMERIC < 0
+LIMIT 100
+2026-03-21 15:11:48,527 - INFO - 127.0.0.1 - - [21/Mar/2026 15:11:48] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:13:57,672 - INFO - 127.0.0.1 - - [21/Mar/2026 15:13:57] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:13:57,928 - INFO - Incoming Request Query: Show items where price is negative
+2026-03-21 15:13:57,930 - INFO - Semantic Layer applied. Enhanced query: Show purchase_category where price is negative
+2026-03-21 15:13:57,942 - INFO - Generated SQL for execution: SELECT Purchase_Category
+FROM ecommerce_behavior
+WHERE Purchase_Amount ::FLOAT::NUMERIC < 0
+LIMIT 100
+2026-03-21 15:13:58,580 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:13:58,582 - INFO - Query executed successfully. Rows returned: 0
+2026-03-21 15:13:58,582 - WARNING - No results found for SQL: SELECT Purchase_Category
+FROM ecommerce_behavior
+WHERE Purchase_Amount ::FLOAT::NUMERIC < 0
+LIMIT 100
+2026-03-21 15:13:58,583 - INFO - 127.0.0.1 - - [21/Mar/2026 15:13:58] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:14:23,095 - INFO - 127.0.0.1 - - [21/Mar/2026 15:14:23] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:14:23,403 - INFO - Incoming Request Query:  Which age group spends the most on purchases?
+2026-03-21 15:14:23,403 - INFO - Semantic Layer applied. Enhanced query:  Which age purchase_category spends the most on purchases?
+2026-03-21 15:14:23,403 - INFO - Generated SQL for execution: SELECT
+    Age,
+    Purchase_Category,
+    SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount
+FROM ecommerce_behavior
+WHERE Age IS NOT NULL
+  AND Purchase_Category IS NOT NULL
+  AND Purchase_Amount IS NOT NULL
+GROUP BY Age, Purchase_Category
+ORDER BY Total_Purchase_Amount DESC
+LIMIT 1
+2026-03-21 15:14:24,812 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:14:24,813 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 15:14:24,817 - INFO - 127.0.0.1 - - [21/Mar/2026 15:14:24] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:22:34,488 - INFO - 127.0.0.1 - - [21/Mar/2026 15:22:34] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:22:34,743 - INFO - Incoming Request Query:  Which age group spends the most on purchases?
+2026-03-21 15:22:34,743 - INFO - Semantic Layer applied. Enhanced query:  Which age purchase_category spends the most on purchases?
+2026-03-21 15:22:34,747 - INFO - Generated SQL for execution: SELECT
+    Age,
+    Purchase_Category,
+    SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount
+FROM ecommerce_behavior
+WHERE Age IS NOT NULL
+  AND Purchase_Category IS NOT NULL
+  AND Purchase_Amount IS NOT NULL
+GROUP BY Age, Purchase_Category
+ORDER BY Total_Purchase_Amount DESC
+LIMIT 1
+2026-03-21 15:22:35,758 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:22:35,759 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 15:22:35,761 - INFO - 127.0.0.1 - - [21/Mar/2026 15:22:35] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:22:54,799 - INFO - 127.0.0.1 - - [21/Mar/2026 15:22:54] "OPTIONS /export HTTP/1.1" 200 -
+2026-03-21 15:22:55,123 - INFO - 127.0.0.1 - - [21/Mar/2026 15:22:55] "POST /export HTTP/1.1" 200 -
+2026-03-21 15:25:02,614 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\ml_engine.py', reloading
+2026-03-21 15:25:34,529 - WARNING -  * Debugger is active!
+2026-03-21 15:25:34,538 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:25:34,539 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:25:34,867 - INFO - 127.0.0.1 - - [21/Mar/2026 15:25:34] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:25:34,868 - INFO - Incoming Request Query:  Which age group spends the most on purchases?
+2026-03-21 15:25:34,872 - INFO - Semantic Layer applied. Enhanced query:  Which age purchase_category spends the most on purchases?
+2026-03-21 15:25:34,873 - INFO - Generated SQL for execution: SELECT
+    Age,
+    Purchase_Category,
+    SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount
+FROM ecommerce_behavior
+WHERE Age IS NOT NULL
+  AND Purchase_Category IS NOT NULL
+  AND Purchase_Amount IS NOT NULL
+GROUP BY Age, Purchase_Category
+ORDER BY Total_Purchase_Amount DESC
+LIMIT 1
+2026-03-21 15:25:36,493 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:25:36,495 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 15:25:36,509 - INFO - 127.0.0.1 - - [21/Mar/2026 15:25:36] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:27:12,935 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 15:27:17,168 - WARNING -  * Debugger is active!
+2026-03-21 15:27:17,174 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:27:17,177 - WARNING -  * Debugger is active!
+2026-03-21 15:27:17,183 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:27:28,117 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 15:27:28,117 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 15:27:32,312 - WARNING -  * Debugger is active!
+2026-03-21 15:27:32,312 - WARNING -  * Debugger is active!
+2026-03-21 15:27:32,312 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:27:32,322 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:27:40,805 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 15:27:45,030 - WARNING -  * Debugger is active!
+2026-03-21 15:27:45,034 - WARNING -  * Debugger is active!
+2026-03-21 15:27:45,038 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:27:45,041 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:27:52,657 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 15:27:56,988 - WARNING -  * Debugger is active!
+2026-03-21 15:27:56,988 - WARNING -  * Debugger is active!
+2026-03-21 15:27:56,992 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:27:56,992 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 15:28:08,512 - INFO - 127.0.0.1 - - [21/Mar/2026 15:28:08] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:28:08,762 - INFO - Incoming Request Query:  Which age group spends the most on purchases?
+2026-03-21 15:28:08,762 - INFO - Semantic Layer applied. Enhanced query:  Which age purchase_category spends the most on purchases?
+2026-03-21 15:28:08,762 - INFO - Generated SQL for execution: SELECT
+    Age,
+    Purchase_Category,
+    SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount
+FROM ecommerce_behavior
+WHERE Age IS NOT NULL
+  AND Purchase_Category IS NOT NULL
+  AND Purchase_Amount IS NOT NULL
+GROUP BY Age, Purchase_Category
+ORDER BY Total_Purchase_Amount DESC
+LIMIT 1
+2026-03-21 15:28:08,762 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:28:08,768 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 15:28:08,768 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 15:28:08,768 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:28:08,768 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 15:28:08,768 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 15:28:10,323 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:28:10,325 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 15:28:10,329 - INFO - 127.0.0.1 - - [21/Mar/2026 15:28:10] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:31:54,151 - INFO - 127.0.0.1 - - [21/Mar/2026 15:31:54] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:31:54,401 - INFO - Incoming Request Query: Show total sales
+2026-03-21 15:31:54,401 - INFO - Semantic Layer applied. Enhanced query: Show total purchase_amount
+2026-03-21 15:31:54,401 - INFO - Generated SQL for execution: SELECT SUM(Purchase_Amount::NUMERIC)
+FROM ecommerce_behavior
+2026-03-21 15:31:54,401 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:31:54,401 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:31:54,831 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:31:54,831 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 15:31:54,834 - INFO - 127.0.0.1 - - [21/Mar/2026 15:31:54] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:32:30,672 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=purchase_category%2Cpurchase_amount%2Ctime_of_purchase "HTTP/2 200 OK"
+2026-03-21 15:32:30,701 - INFO - 127.0.0.1 - - [21/Mar/2026 15:32:30] "GET /analytics/sales HTTP/1.1" 200 -
+2026-03-21 15:32:31,184 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=purchase_category%2Cpurchase_amount%2Ctime_of_purchase "HTTP/2 200 OK"
+2026-03-21 15:32:31,217 - INFO - 127.0.0.1 - - [21/Mar/2026 15:32:31] "GET /analytics/sales HTTP/1.1" 200 -
+2026-03-21 15:32:33,355 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=purchase_category%2Cpurchase_amount "HTTP/2 200 OK"
+2026-03-21 15:32:33,377 - INFO - 127.0.0.1 - - [21/Mar/2026 15:32:33] "GET /analytics/products HTTP/1.1" 200 -
+2026-03-21 15:32:33,759 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=purchase_category%2Cpurchase_amount "HTTP/2 200 OK"
+2026-03-21 15:32:33,785 - INFO - 127.0.0.1 - - [21/Mar/2026 15:32:33] "GET /analytics/products HTTP/1.1" 200 -
+2026-03-21 15:32:35,501 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=customer_id%2Clocation "HTTP/2 200 OK"
+2026-03-21 15:32:35,617 - INFO - 127.0.0.1 - - [21/Mar/2026 15:32:35] "GET /analytics/customers HTTP/1.1" 200 -
+2026-03-21 15:32:36,027 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=customer_id%2Clocation "HTTP/2 200 OK"
+2026-03-21 15:32:36,049 - INFO - 127.0.0.1 - - [21/Mar/2026 15:32:36] "GET /analytics/customers HTTP/1.1" 200 -
+2026-03-21 15:35:56,655 - INFO - 127.0.0.1 - - [21/Mar/2026 15:35:56] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:35:56,908 - INFO - Incoming Request Query: Show total sales
+2026-03-21 15:35:56,908 - WARNING - BLOCKED: Attempted drill-down on forbidden column 'sum'
+2026-03-21 15:35:56,908 - INFO - 127.0.0.1 - - [21/Mar/2026 15:35:56] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 15:35:58,439 - INFO - Incoming Request Query: Show total sales
+2026-03-21 15:35:58,439 - WARNING - BLOCKED: Attempted drill-down on forbidden column 'sum'
+2026-03-21 15:35:58,439 - INFO - 127.0.0.1 - - [21/Mar/2026 15:35:58] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 15:36:03,068 - INFO - 127.0.0.1 - - [21/Mar/2026 15:36:03] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:36:03,333 - INFO - Incoming Request Query: Show total sales
+2026-03-21 15:36:03,333 - WARNING - BLOCKED: Attempted drill-down on forbidden column 'sum'
+2026-03-21 15:36:03,333 - INFO - 127.0.0.1 - - [21/Mar/2026 15:36:03] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 15:36:18,152 - INFO - 127.0.0.1 - - [21/Mar/2026 15:36:18] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:36:18,459 - INFO - Incoming Request Query: What is the average purchase amount?
+2026-03-21 15:36:18,459 - INFO - Semantic Layer applied. Enhanced query: What is the average purchase amount?
+2026-03-21 15:36:20,464 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 15:36:20,488 - INFO - AI SQL Generation complete. Length: 88
+2026-03-21 15:36:20,492 - INFO - Generated SQL for execution: SELECT AVG(Purchase_Amount::NUMERIC) AS average_purchase_amount FROM ecommerce_behavior
+2026-03-21 15:36:20,492 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:36:20,494 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVERAGE_PURCHASE_AMOUNT'
+2026-03-21 15:36:20,494 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:36:20,494 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVERAGE_PURCHASE_AMOUNT'
+2026-03-21 15:36:21,184 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:36:21,186 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 15:36:21,188 - INFO - 127.0.0.1 - - [21/Mar/2026 15:36:21] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:36:24,888 - INFO - 127.0.0.1 - - [21/Mar/2026 15:36:24] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:36:25,201 - INFO - Incoming Request Query: What is the average purchase amount?
+2026-03-21 15:36:25,201 - WARNING - BLOCKED: Attempted drill-down on forbidden column 'average_purchase_amount'
+2026-03-21 15:36:25,203 - INFO - 127.0.0.1 - - [21/Mar/2026 15:36:25] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 15:37:05,527 - INFO - 127.0.0.1 - - [21/Mar/2026 15:37:05] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:37:05,835 - INFO - Incoming Request Query: Show total sales by category
+2026-03-21 15:37:05,835 - INFO - Semantic Layer applied. Enhanced query: Show total purchase_amount by category
+2026-03-21 15:37:05,848 - INFO - Generated SQL for execution: SELECT Purchase_Category, SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount
+FROM ecommerce_behavior
+WHERE Purchase_Amount IS NOT NULL
+GROUP BY Purchase_Category
+ORDER BY Total_Purchase_Amount DESC
+LIMIT 100
+2026-03-21 15:37:05,849 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:37:05,849 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 15:37:05,849 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 15:37:05,849 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:37:05,849 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 15:37:05,849 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 15:37:06,038 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:37:06,039 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 15:37:06,042 - INFO - 127.0.0.1 - - [21/Mar/2026 15:37:06] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:37:44,688 - INFO - 127.0.0.1 - - [21/Mar/2026 15:37:44] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:37:44,997 - INFO - Incoming Request Query:  What percentage of users used discounts?
+2026-03-21 15:37:44,997 - INFO - Semantic Layer applied. Enhanced query:  What percentage of users used discounts?
+2026-03-21 15:37:46,793 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 15:37:46,796 - INFO - AI SQL Generation complete. Length: 130
+2026-03-21 15:37:46,799 - INFO - Generated SQL for execution: SELECT (COUNT(CASE WHEN Discount_Used = 'Yes' THEN 1 END) * 100.0 / COUNT(*)) AS percentage_discount_used
+FROM ecommerce_behavior
+2026-03-21 15:37:46,800 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 15:37:46,800 - WARNING - VALIDATION: Potential unauthorized field detected: 'PERCENTAGE_DISCOUNT_USED'
+2026-03-21 15:37:46,800 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 15:37:46,801 - WARNING - VALIDATION: Potential unauthorized field detected: 'PERCENTAGE_DISCOUNT_USED'
+2026-03-21 15:37:46,999 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:37:47,001 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 15:37:47,003 - INFO - 127.0.0.1 - - [21/Mar/2026 15:37:47] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:38:11,627 - INFO - 127.0.0.1 - - [21/Mar/2026 15:38:11] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:38:11,941 - INFO - Incoming Request Query: Show total sales where discount was used
+2026-03-21 15:38:11,941 - INFO - Semantic Layer applied. Enhanced query: Show total purchase_amount where discount was used
+2026-03-21 15:38:13,020 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 15:38:13,022 - INFO - AI SQL Generation complete. Length: 89
+2026-03-21 15:38:13,023 - INFO - Generated SQL for execution: SELECT SUM(Purchase_Amount::NUMERIC)
+FROM ecommerce_behavior
+WHERE Discount_Used = 'Yes'
+2026-03-21 15:38:13,023 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:38:13,023 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 15:38:13,026 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:38:13,026 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 15:38:13,134 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:38:13,134 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 15:38:13,136 - INFO - 127.0.0.1 - - [21/Mar/2026 15:38:13] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:38:33,112 - INFO - 127.0.0.1 - - [21/Mar/2026 15:38:33] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:38:33,422 - INFO - Incoming Request Query: Which category has highest sales?
+2026-03-21 15:38:33,422 - INFO - Semantic Layer applied. Enhanced query: Which category has highest purchase_amount?
+2026-03-21 15:38:34,513 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 15:38:34,517 - INFO - AI SQL Generation complete. Length: 206
+2026-03-21 15:38:34,518 - INFO - Generated SQL for execution: SELECT Purchase_Category, AVG(Purchase_Amount::NUMERIC) AS avg_purchase_amount
+FROM ecommerce_behavior
+WHERE Purchase_Amount IS NOT NULL
+GROUP BY Purchase_Category
+ORDER BY avg_purchase_amount DESC
+LIMIT 1
+2026-03-21 15:38:34,518 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:38:34,520 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVG_PURCHASE_AMOUNT'
+2026-03-21 15:38:34,520 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVG_PURCHASE_AMOUNT'
+2026-03-21 15:38:34,520 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:38:34,520 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVG_PURCHASE_AMOUNT'
+2026-03-21 15:38:34,520 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVG_PURCHASE_AMOUNT'
+2026-03-21 15:38:34,628 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:38:34,630 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 15:38:34,630 - INFO - 127.0.0.1 - - [21/Mar/2026 15:38:34] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:38:59,985 - INFO - 127.0.0.1 - - [21/Mar/2026 15:38:59] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:39:00,290 - INFO - Incoming Request Query: How much revenue is generated?
+2026-03-21 15:39:00,290 - INFO - Semantic Layer applied. Enhanced query: How much purchase_amount is generated?
+2026-03-21 15:39:01,141 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 15:39:01,143 - INFO - AI SQL Generation complete. Length: 61
+2026-03-21 15:39:01,143 - INFO - Generated SQL for execution: SELECT SUM(Purchase_Amount::NUMERIC) FROM ecommerce_behavior
+2026-03-21 15:39:01,145 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:39:01,145 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:39:01,249 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:39:01,252 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 15:39:01,254 - INFO - 127.0.0.1 - - [21/Mar/2026 15:39:01] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:39:50,724 - INFO - 127.0.0.1 - - [21/Mar/2026 15:39:50] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:39:51,027 - INFO - Incoming Request Query:  Spending by category
+2026-03-21 15:39:51,027 - INFO - Semantic Layer applied. Enhanced query:  purchase_amount by category
+2026-03-21 15:39:52,138 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 15:39:52,141 - INFO - AI SQL Generation complete. Length: 245
+2026-03-21 15:39:52,141 - INFO - Generated SQL for execution: SELECT 
+    Purchase_Category,
+    AVG(Purchase_Amount::NUMERIC) AS average_purchase_amount
+FROM 
+    ecommerce_behavior
+WHERE 
+    Purchase_Amount IS NOT NULL
+GROUP BY 
+    Purchase_Category
+ORDER BY 
+    average_purchase_amount DESC
+LIMIT 100
+2026-03-21 15:39:52,141 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:39:52,141 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVERAGE_PURCHASE_AMOUNT'
+2026-03-21 15:39:52,144 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVERAGE_PURCHASE_AMOUNT'
+2026-03-21 15:39:52,145 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:39:52,145 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVERAGE_PURCHASE_AMOUNT'
+2026-03-21 15:39:52,145 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVERAGE_PURCHASE_AMOUNT'
+2026-03-21 15:39:52,342 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:39:52,342 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 15:39:52,347 - INFO - 127.0.0.1 - - [21/Mar/2026 15:39:52] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:40:25,975 - INFO - 127.0.0.1 - - [21/Mar/2026 15:40:25] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:40:26,278 - INFO - Incoming Request Query: Show data for users older than 200
+2026-03-21 15:40:26,280 - INFO - Semantic Layer applied. Enhanced query: Show data for users older than 200
+2026-03-21 15:40:29,174 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 15:40:29,177 - INFO - AI SQL Generation complete. Length: 690
+2026-03-21 15:40:29,177 - INFO - Generated SQL for execution: SELECT 
+    Customer_ID,
+    Age,
+    Gender,
+    Income_Level,
+    Marital_Status,
+    Education_Level,
+    Occupation,
+    Location,
+    Purchase_Category,
+    Purchase_Amount,
+    Frequency_of_Purchase,
+    Purchase_Channel,
+    Brand_Loyalty,
+    Product_Rating,
+    Time_Spent_on_Product_Researchhours,
+    Social_Media_Influence,
+    Discount_Sensitivity,
+    Return_Rate,
+    Customer_Satisfaction,
+    Engagement_with_Ads,
+    Device_Used_for_Shopping,
+    Payment_Method,
+    Time_of_Purchase,
+    Discount_Used,
+    Customer_Loyalty_Program_Member,
+    Purchase_Intent,
+    Shipping_Preference,
+    Time_to_Decision
+FROM ecommerce_behavior
+WHERE Age::INT::NUMERIC > 200
+LIMIT 100
+2026-03-21 15:40:29,177 - WARNING - VALIDATION: Potential unauthorized field detected: 'INCOME_LEVEL'
+2026-03-21 15:40:29,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'MARITAL_STATUS'
+2026-03-21 15:40:29,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'EDUCATION_LEVEL'
+2026-03-21 15:40:29,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'FREQUENCY_OF_PURCHASE'
+2026-03-21 15:40:29,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'BRAND_LOYALTY'
+2026-03-21 15:40:29,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'TIME_SPENT_ON_PRODUCT_RESEARCHHOURS'
+2026-03-21 15:40:29,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'SOCIAL_MEDIA_INFLUENCE'
+2026-03-21 15:40:29,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'DISCOUNT_SENSITIVITY'
+2026-03-21 15:40:29,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'ENGAGEMENT_WITH_ADS'
+2026-03-21 15:40:29,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'DEVICE_USED_FOR_SHOPPING'
+2026-03-21 15:40:29,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'PAYMENT_METHOD'
+2026-03-21 15:40:29,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'CUSTOMER_LOYALTY_PROGRAM_MEMBER'
+2026-03-21 15:40:29,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'PURCHASE_INTENT'
+2026-03-21 15:40:29,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'SHIPPING_PREFERENCE'
+2026-03-21 15:40:29,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'TIME_TO_DECISION'
+2026-03-21 15:40:29,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'INT'
+2026-03-21 15:40:29,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:40:29,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'INCOME_LEVEL'
+2026-03-21 15:40:29,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'MARITAL_STATUS'
+2026-03-21 15:40:29,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'EDUCATION_LEVEL'
+2026-03-21 15:40:29,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'FREQUENCY_OF_PURCHASE'
+2026-03-21 15:40:29,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'BRAND_LOYALTY'
+2026-03-21 15:40:29,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'TIME_SPENT_ON_PRODUCT_RESEARCHHOURS'
+2026-03-21 15:40:29,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'SOCIAL_MEDIA_INFLUENCE'
+2026-03-21 15:40:29,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'DISCOUNT_SENSITIVITY'
+2026-03-21 15:40:29,186 - WARNING - VALIDATION: Potential unauthorized field detected: 'ENGAGEMENT_WITH_ADS'
+2026-03-21 15:40:29,186 - WARNING - VALIDATION: Potential unauthorized field detected: 'DEVICE_USED_FOR_SHOPPING'
+2026-03-21 15:40:29,186 - WARNING - VALIDATION: Potential unauthorized field detected: 'PAYMENT_METHOD'
+2026-03-21 15:40:29,186 - WARNING - VALIDATION: Potential unauthorized field detected: 'CUSTOMER_LOYALTY_PROGRAM_MEMBER'
+2026-03-21 15:40:29,186 - WARNING - VALIDATION: Potential unauthorized field detected: 'PURCHASE_INTENT'
+2026-03-21 15:40:29,186 - WARNING - VALIDATION: Potential unauthorized field detected: 'SHIPPING_PREFERENCE'
+2026-03-21 15:40:29,186 - WARNING - VALIDATION: Potential unauthorized field detected: 'TIME_TO_DECISION'
+2026-03-21 15:40:29,186 - WARNING - VALIDATION: Potential unauthorized field detected: 'INT'
+2026-03-21 15:40:29,186 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:40:29,522 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:40:29,522 - INFO - Query executed successfully. Rows returned: 0
+2026-03-21 15:40:29,527 - WARNING - No results found for SQL: SELECT 
+    Customer_ID,
+    Age,
+    Gender,
+    Income_Level,
+    Marital_Status,
+    Education_Level,
+    Occupation,
+    Location,
+    Purchase_Category,
+    Purchase_Amount,
+    Frequency_of_Purchase,
+    Purchase_Channel,
+    Brand_Loyalty,
+    Product_Rating,
+    Time_Spent_on_Product_Researchhours,
+    Social_Media_Influence,
+    Discount_Sensitivity,
+    Return_Rate,
+    Customer_Satisfaction,
+    Engagement_with_Ads,
+    Device_Used_for_Shopping,
+    Payment_Method,
+    Time_of_Purchase,
+    Discount_Used,
+    Customer_Loyalty_Program_Member,
+    Purchase_Intent,
+    Shipping_Preference,
+    Time_to_Decision
+FROM ecommerce_behavior
+WHERE Age::INT::NUMERIC > 200
+LIMIT 100
+2026-03-21 15:40:29,528 - INFO - 127.0.0.1 - - [21/Mar/2026 15:40:29] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:40:49,508 - INFO - 127.0.0.1 - - [21/Mar/2026 15:40:49] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:40:49,813 - INFO - Incoming Request Query:  Show users with purchase amount > 10000
+2026-03-21 15:40:49,813 - INFO - Semantic Layer applied. Enhanced query:  Show users with purchase amount > 10000
+2026-03-21 15:40:51,634 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 15:40:51,636 - INFO - AI SQL Generation complete. Length: 116
+2026-03-21 15:40:51,638 - INFO - Generated SQL for execution: SELECT Customer_ID, Purchase_Amount
+FROM ecommerce_behavior
+WHERE Purchase_Amount::NUMERIC > 10000::FLOAT
+LIMIT 100
+2026-03-21 15:40:51,639 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:40:51,639 - WARNING - VALIDATION: Potential unauthorized field detected: 'FLOAT'
+2026-03-21 15:40:51,639 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 15:40:51,639 - WARNING - VALIDATION: Potential unauthorized field detected: 'FLOAT'
+2026-03-21 15:40:51,841 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:40:51,841 - INFO - Query executed successfully. Rows returned: 0
+2026-03-21 15:40:51,841 - WARNING - No results found for SQL: SELECT Customer_ID, Purchase_Amount
+FROM ecommerce_behavior
+WHERE Purchase_Amount::NUMERIC > 10000::FLOAT
+LIMIT 100
+2026-03-21 15:40:51,841 - INFO - 127.0.0.1 - - [21/Mar/2026 15:40:51] "POST /query HTTP/1.1" 200 -
+2026-03-21 15:41:31,967 - INFO - 127.0.0.1 - - [21/Mar/2026 15:41:31] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 15:41:32,273 - INFO - Incoming Request Query:  abcxyz query
+2026-03-21 15:41:32,275 - INFO - Semantic Layer applied. Enhanced query:  abcxyz query
+2026-03-21 15:41:33,724 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 15:41:33,726 - INFO - AI SQL Generation complete. Length: 83
+2026-03-21 15:41:33,726 - INFO - Generated SQL for execution: SELECT Customer_ID, Age, Gender, Purchase_Amount
+FROM ecommerce_behavior
+LIMIT 100
+2026-03-21 15:41:34,236 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 15:41:34,238 - INFO - Query executed successfully. Rows returned: 100
+2026-03-21 15:41:34,336 - INFO - 127.0.0.1 - - [21/Mar/2026 15:41:34] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:13:32,362 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:13:32,362 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:13:55,958 - WARNING -  * Debugger is active!
+2026-03-21 16:13:55,965 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:13:55,965 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:13:59,695 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:13:59,695 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:14:03,882 - WARNING -  * Debugger is active!
+2026-03-21 16:14:03,884 - WARNING -  * Debugger is active!
+2026-03-21 16:14:03,889 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:14:03,889 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:14:16,332 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:14:16,332 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:14:20,771 - WARNING -  * Debugger is active!
+2026-03-21 16:14:20,771 - WARNING -  * Debugger is active!
+2026-03-21 16:14:20,777 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:14:20,777 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:14:51,927 - INFO - 127.0.0.1 - - [21/Mar/2026 16:14:51] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:14:52,183 - INFO - Incoming Request Query: What percentage of users used discount?
+2026-03-21 16:14:52,184 - INFO - Semantic Layer applied. Enhanced query: What percentage of users used discount?
+2026-03-21 16:14:55,841 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 16:14:55,868 - INFO - AI SQL Generation complete. Length: 131
+2026-03-21 16:14:55,870 - INFO - Generated SQL for execution: SELECT (COUNT(CASE WHEN Discount_Used = 'Yes' THEN 1 END) * 100.0 / COUNT(*)) AS percentage_discount_used 
+FROM ecommerce_behavior
+2026-03-21 16:14:55,872 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 16:14:55,872 - WARNING - VALIDATION: Potential unauthorized field detected: 'PERCENTAGE_DISCOUNT_USED'
+2026-03-21 16:14:55,872 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 16:14:55,872 - WARNING - VALIDATION: Potential unauthorized field detected: 'PERCENTAGE_DISCOUNT_USED'
+2026-03-21 16:14:59,329 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:14:59,330 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 16:14:59,344 - INFO - 127.0.0.1 - - [21/Mar/2026 16:14:59] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:15:40,125 - INFO - 127.0.0.1 - - [21/Mar/2026 16:15:40] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:15:40,433 - INFO - Incoming Request Query: Percentage of users with discount = Yes
+2026-03-21 16:15:40,433 - INFO - Semantic Layer applied. Enhanced query: Percentage of users with discount = Yes
+2026-03-21 16:15:42,038 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 16:15:42,040 - INFO - AI SQL Generation complete. Length: 116
+2026-03-21 16:15:42,040 - INFO - Generated SQL for execution: SELECT (COUNT(CASE WHEN Discount_Used = 'Yes' THEN 1 END) * 100.0 / COUNT(*)) AS percentage
+FROM ecommerce_behavior
+2026-03-21 16:15:42,043 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 16:15:42,043 - WARNING - VALIDATION: Potential unauthorized field detected: 'PERCENTAGE'
+2026-03-21 16:15:42,043 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 16:15:42,043 - WARNING - VALIDATION: Potential unauthorized field detected: 'PERCENTAGE'
+2026-03-21 16:15:42,339 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:15:42,339 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 16:15:42,339 - INFO - 127.0.0.1 - - [21/Mar/2026 16:15:42] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:19:45,455 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:19:45,455 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:19:49,707 - WARNING -  * Debugger is active!
+2026-03-21 16:19:49,707 - WARNING -  * Debugger is active!
+2026-03-21 16:19:49,715 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:20:10,052 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:20:10,052 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:20:14,517 - WARNING -  * Debugger is active!
+2026-03-21 16:20:14,521 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:20:14,521 - WARNING -  * Debugger is active!
+2026-03-21 16:20:14,530 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:21:50,503 - INFO - 127.0.0.1 - - [21/Mar/2026 16:21:50] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:21:50,759 - INFO - Incoming Request Query: Which category has highest sales?
+2026-03-21 16:21:50,759 - INFO - Semantic Layer applied. Enhanced query: Which category has highest purchase_amount?
+2026-03-21 16:21:52,042 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 16:21:52,069 - INFO - AI SQL Generation complete. Length: 160
+2026-03-21 16:21:52,072 - INFO - Generated SQL for execution: SELECT Purchase_Category, SUM(Purchase_Amount::NUMERIC) AS Total_Revenue
+FROM ecommerce_behavior
+GROUP BY Purchase_Category
+ORDER BY Total_Revenue DESC
+LIMIT 1
+2026-03-21 16:21:52,074 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:21:52,074 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_REVENUE'
+2026-03-21 16:21:52,074 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_REVENUE'
+2026-03-21 16:21:52,074 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:21:52,074 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_REVENUE'
+2026-03-21 16:21:52,074 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_REVENUE'
+2026-03-21 16:21:53,170 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:21:53,172 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 16:21:53,177 - INFO - 127.0.0.1 - - [21/Mar/2026 16:21:53] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:22:33,013 - INFO - 127.0.0.1 - - [21/Mar/2026 16:22:33] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:22:33,322 - INFO - Incoming Request Query: Which category has highest average purchase?
+2026-03-21 16:22:33,322 - INFO - Semantic Layer applied. Enhanced query: Which category has highest average purchase?
+2026-03-21 16:22:34,716 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 16:22:34,716 - INFO - AI SQL Generation complete. Length: 166
+2026-03-21 16:22:34,720 - INFO - Generated SQL for execution: SELECT Purchase_Category, AVG(Purchase_Amount::NUMERIC) AS average_purchase
+FROM ecommerce_behavior
+GROUP BY Purchase_Category
+ORDER BY average_purchase DESC
+LIMIT 1
+2026-03-21 16:22:34,720 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:22:34,720 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVERAGE_PURCHASE'
+2026-03-21 16:22:34,720 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVERAGE_PURCHASE'
+2026-03-21 16:22:34,722 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:22:34,722 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVERAGE_PURCHASE'
+2026-03-21 16:22:34,722 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVERAGE_PURCHASE'
+2026-03-21 16:22:35,127 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:22:35,129 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 16:22:35,130 - INFO - 127.0.0.1 - - [21/Mar/2026 16:22:35] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:23:56,786 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:24:01,919 - WARNING -  * Debugger is active!
+2026-03-21 16:24:01,922 - WARNING -  * Debugger is active!
+2026-03-21 16:24:01,929 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:24:01,932 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:24:04,697 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:24:09,715 - WARNING -  * Debugger is active!
+2026-03-21 16:24:09,723 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:24:09,732 - WARNING -  * Debugger is active!
+2026-03-21 16:24:09,742 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:25:18,184 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:25:18,184 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:25:22,420 - WARNING -  * Debugger is active!
+2026-03-21 16:25:22,420 - WARNING -  * Debugger is active!
+2026-03-21 16:25:22,427 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:25:22,427 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:25:26,689 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:25:26,689 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:25:30,979 - WARNING -  * Debugger is active!
+2026-03-21 16:25:30,979 - WARNING -  * Debugger is active!
+2026-03-21 16:25:30,983 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:25:30,983 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:26:08,279 - INFO - 127.0.0.1 - - [21/Mar/2026 16:26:08] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:26:08,524 - INFO - Incoming Request Query: Show total sales where discount was used
+2026-03-21 16:26:08,524 - INFO - Semantic Layer applied. Enhanced query: Show total purchase_amount where discount was used
+2026-03-21 16:26:10,071 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 16:26:10,100 - INFO - AI SQL Generation complete. Length: 224
+2026-03-21 16:26:10,101 - INFO - Generated SQL for execution: SELECT 
+    SUM(CASE 
+            WHEN LOWER(TRIM(COALESCE(discount_used, ''))) = 'yes' 
+            THEN purchase_amount 
+            ELSE 0 
+        END) AS total_purchase_amount_with_discount
+FROM 
+    ecommerce_behavior
+2026-03-21 16:26:10,101 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:26:10,101 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:26:10,101 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:26:10,105 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 16:26:10,105 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT_WITH_DISCOUNT'
+2026-03-21 16:26:10,105 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:26:10,105 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:26:10,105 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:26:10,105 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 16:26:10,105 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT_WITH_DISCOUNT'
+2026-03-21 16:26:12,210 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:26:12,210 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 16:26:12,212 - INFO - 127.0.0.1 - - [21/Mar/2026 16:26:12] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:28:14,448 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:28:14,449 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:28:18,497 - WARNING -  * Debugger is active!
+2026-03-21 16:28:18,503 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:28:18,503 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:28:30,801 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:28:30,802 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:28:34,972 - WARNING -  * Debugger is active!
+2026-03-21 16:28:34,972 - WARNING -  * Debugger is active!
+2026-03-21 16:28:34,976 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:28:34,981 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:28:55,988 - INFO - 127.0.0.1 - - [21/Mar/2026 16:28:55] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:28:56,244 - INFO - Incoming Request Query: Sales by category
+2026-03-21 16:28:56,247 - INFO - Semantic Layer applied. Enhanced query: purchase_amount by category
+2026-03-21 16:28:57,557 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 16:28:57,583 - INFO - AI SQL Generation complete. Length: 259
+2026-03-21 16:28:57,587 - INFO - Generated SQL for execution: SELECT 
+    LOWER(TRIM(COALESCE(Purchase_Category, ''))) AS Purchase_Category,
+    SUM(Purchase_Amount::NUMERIC) AS Total_Amount
+FROM 
+    ecommerce_behavior
+GROUP BY 
+    LOWER(TRIM(COALESCE(Purchase_Category, '')))
+ORDER BY 
+    Total_Amount DESC
+LIMIT 100
+2026-03-21 16:28:57,588 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:28:57,588 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:28:57,588 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:28:57,588 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:28:57,588 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 16:28:57,588 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:28:57,588 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:28:57,590 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:28:57,590 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 16:28:57,590 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:28:57,591 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:28:57,591 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:28:57,591 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:28:57,591 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 16:28:57,591 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:28:57,592 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:28:57,592 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:28:57,592 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 16:28:58,655 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:28:58,657 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 16:28:58,662 - INFO - 127.0.0.1 - - [21/Mar/2026 16:28:58] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:30:35,619 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:30:35,619 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:30:39,755 - WARNING -  * Debugger is active!
+2026-03-21 16:30:39,758 - WARNING -  * Debugger is active!
+2026-03-21 16:30:39,762 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:30:39,764 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:30:43,834 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:30:43,834 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:30:47,973 - WARNING -  * Debugger is active!
+2026-03-21 16:30:47,980 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:30:47,985 - WARNING -  * Debugger is active!
+2026-03-21 16:30:47,991 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:31:03,555 - INFO - 127.0.0.1 - - [21/Mar/2026 16:31:03] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:31:03,812 - INFO - Incoming Request Query: ytryryry4y
+2026-03-21 16:31:03,812 - WARNING - BLOCKED: Unclear query intent: ytryryry4y
+2026-03-21 16:31:03,813 - INFO - 127.0.0.1 - - [21/Mar/2026 16:31:03] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 16:31:27,145 - INFO - 127.0.0.1 - - [21/Mar/2026 16:31:27] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:31:27,449 - INFO - Incoming Request Query: adssfdgfrgh
+2026-03-21 16:31:27,449 - WARNING - BLOCKED: Unclear query intent: adssfdgfrgh
+2026-03-21 16:31:27,449 - INFO - 127.0.0.1 - - [21/Mar/2026 16:31:27] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 16:31:44,593 - INFO - 127.0.0.1 - - [21/Mar/2026 16:31:44] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:31:44,902 - INFO - Incoming Request Query: rtgrrtgrth
+2026-03-21 16:31:44,902 - WARNING - BLOCKED: Unclear query intent: rtgrrtgrth
+2026-03-21 16:31:44,902 - INFO - 127.0.0.1 - - [21/Mar/2026 16:31:44] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 16:33:47,351 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:33:51,683 - WARNING -  * Debugger is active!
+2026-03-21 16:33:51,687 - WARNING -  * Debugger is active!
+2026-03-21 16:33:51,689 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:33:51,693 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:33:54,985 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:33:54,986 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:33:54,986 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:33:59,255 - WARNING -  * Debugger is active!
+2026-03-21 16:33:59,261 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:33:59,318 - WARNING -  * Debugger is active!
+2026-03-21 16:33:59,324 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:34:11,658 - INFO - 127.0.0.1 - - [21/Mar/2026 16:34:11] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:34:11,921 - INFO - Incoming Request Query: thtyh45y5
+2026-03-21 16:34:11,921 - WARNING - BLOCKED: Unclear query intent: thtyh45y5
+2026-03-21 16:34:11,921 - INFO - 127.0.0.1 - - [21/Mar/2026 16:34:11] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 16:34:33,950 - INFO - 127.0.0.1 - - [21/Mar/2026 16:34:33] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:34:34,255 - INFO - Incoming Request Query: Sales by category
+2026-03-21 16:34:34,256 - INFO - Semantic Layer applied. Enhanced query: purchase_amount by category
+2026-03-21 16:34:34,272 - INFO - Generated SQL for execution: SELECT 
+    LOWER(TRIM(COALESCE(Purchase_Category, ''))) AS Purchase_Category,
+    SUM(Purchase_Amount::NUMERIC) AS Total_Amount
+FROM 
+    ecommerce_behavior
+GROUP BY 
+    LOWER(TRIM(COALESCE(Purchase_Category, '')))
+ORDER BY 
+    Total_Amount DESC
+LIMIT 100
+2026-03-21 16:34:34,274 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:34:34,274 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:34:34,274 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:34:34,274 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:34:34,274 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 16:34:34,274 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:34:34,274 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:34:34,274 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:34:34,277 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 16:34:34,277 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:34:34,277 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:34:34,277 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:34:34,277 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:34:34,277 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 16:34:34,277 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:34:34,277 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:34:34,277 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:34:34,277 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 16:34:36,049 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:34:36,052 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 16:34:36,058 - INFO - 127.0.0.1 - - [21/Mar/2026 16:34:36] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:37:29,184 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:37:29,184 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:38:28,892 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-21 16:38:28,893 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-21 16:38:28,901 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 16:38:32,258 - WARNING -  * Debugger is active!
+2026-03-21 16:38:32,264 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:39:30,066 - INFO - 127.0.0.1 - - [21/Mar/2026 16:39:30] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:39:30,317 - INFO - Incoming Request Query: abcxyz query
+2026-03-21 16:39:30,318 - WARNING - TERMINATED: Unclear query intent detected: abcxyz query
+2026-03-21 16:39:30,319 - INFO - 127.0.0.1 - - [21/Mar/2026 16:39:30] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 16:43:21,340 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:43:21,852 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 16:43:25,588 - WARNING -  * Debugger is active!
+2026-03-21 16:43:25,590 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:43:32,351 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:43:32,823 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 16:43:36,557 - WARNING -  * Debugger is active!
+2026-03-21 16:43:36,564 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:44:39,131 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:44:39,675 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 16:44:43,388 - WARNING -  * Debugger is active!
+2026-03-21 16:44:43,392 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:45:41,867 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 16:45:42,291 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 16:45:46,072 - WARNING -  * Debugger is active!
+2026-03-21 16:45:46,077 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:46:18,822 - INFO - 127.0.0.1 - - [21/Mar/2026 16:46:18] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:46:19,081 - INFO - Incoming Request Query: total sales by category
+2026-03-21 16:46:19,083 - INFO - Semantic Layer applied. Enhanced query: total purchase_amount by category
+2026-03-21 16:46:19,523 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 16:46:19,555 - INFO - AI SQL Generation complete. Length: 228
+2026-03-21 16:46:19,559 - INFO - Raw SQL Generation: SELECT 
+  LOWER(TRIM(COALESCE(purchase_category, ''))) AS purchase_category,
+  SUM(purchase_amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+GROUP BY 
+  LOWER(TRIM(COALESCE(purchase_category, '')))
+LIMIT 100;
+2026-03-21 16:46:19,559 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:46:19,560 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:46:19,561 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:46:19,562 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:46:19,564 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:46:19,564 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:46:19,565 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:46:19,565 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:46:20,831 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:46:20,834 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 16:46:20,840 - INFO - 127.0.0.1 - - [21/Mar/2026 16:46:20] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:46:39,305 - INFO - 127.0.0.1 - - [21/Mar/2026 16:46:39] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:46:39,615 - INFO - Incoming Request Query: abcxyz
+2026-03-21 16:46:39,615 - WARNING - TERMINATED: Unclear query intent detected: abcxyz
+2026-03-21 16:46:39,616 - INFO - 127.0.0.1 - - [21/Mar/2026 16:46:39] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 16:47:22,739 - INFO - 127.0.0.1 - - [21/Mar/2026 16:47:22] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:47:23,046 - INFO - Incoming Request Query: abcxyz
+2026-03-21 16:47:23,046 - WARNING - TERMINATED: Unclear query intent detected: abcxyz
+2026-03-21 16:47:23,046 - INFO - 127.0.0.1 - - [21/Mar/2026 16:47:23] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 16:47:24,219 - INFO - Incoming Request Query: abcxyz
+2026-03-21 16:47:24,219 - WARNING - TERMINATED: Unclear query intent detected: abcxyz
+2026-03-21 16:47:24,220 - INFO - 127.0.0.1 - - [21/Mar/2026 16:47:24] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 16:47:25,264 - INFO - Incoming Request Query: abcxyz
+2026-03-21 16:47:25,264 - WARNING - TERMINATED: Unclear query intent detected: abcxyz
+2026-03-21 16:47:25,264 - INFO - 127.0.0.1 - - [21/Mar/2026 16:47:25] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 16:47:44,159 - INFO - 127.0.0.1 - - [21/Mar/2026 16:47:44] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:47:44,476 - INFO - Incoming Request Query: show sales by city
+2026-03-21 16:47:44,480 - INFO - Semantic Layer applied. Enhanced query: show purchase_amount by location
+2026-03-21 16:47:44,812 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 16:47:44,815 - INFO - AI SQL Generation complete. Length: 240
+2026-03-21 16:47:44,820 - INFO - Raw SQL Generation: SELECT 
+  LOWER(TRIM(COALESCE(Location, ''))) AS location,
+  SUM(Purchase_Amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+GROUP BY 
+  LOWER(TRIM(COALESCE(Location, '')))
+ORDER BY 
+  total_purchase_amount DESC
+LIMIT 100;
+2026-03-21 16:47:44,821 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:47:44,821 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:47:44,821 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:47:44,822 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:47:44,822 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:47:44,822 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:47:44,822 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:47:44,822 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:47:44,822 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:47:45,113 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:47:45,113 - INFO - Query executed successfully. Rows returned: 100
+2026-03-21 16:47:45,122 - INFO - 127.0.0.1 - - [21/Mar/2026 16:47:45] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:47:54,391 - INFO - 127.0.0.1 - - [21/Mar/2026 16:47:54] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:47:54,699 - INFO - Incoming Request Query: show sales by ctiy
+2026-03-21 16:47:54,699 - INFO - Semantic Layer applied. Enhanced query: show purchase_amount by ctiy
+2026-03-21 16:47:55,588 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 16:47:55,594 - INFO - AI SQL Generation complete. Length: 236
+2026-03-21 16:47:55,597 - INFO - Raw SQL Generation: SELECT 
+  LOWER(TRIM(COALESCE(Location, ''))) AS city,
+  SUM(Purchase_Amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+GROUP BY 
+  LOWER(TRIM(COALESCE(Location, '')))
+ORDER BY 
+  total_purchase_amount DESC
+LIMIT 100;
+2026-03-21 16:47:55,597 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:47:55,597 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:47:55,597 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:47:55,597 - WARNING - VALIDATION: Potential unauthorized field detected: 'CITY'
+2026-03-21 16:47:55,599 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:47:55,599 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:47:55,599 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:47:55,600 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:47:55,600 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:47:55,600 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:47:55,740 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:47:55,748 - INFO - Query executed successfully. Rows returned: 100
+2026-03-21 16:47:55,752 - INFO - 127.0.0.1 - - [21/Mar/2026 16:47:55] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:48:17,310 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\ml_engine.py', reloading
+2026-03-21 16:48:17,729 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 16:48:21,165 - WARNING -  * Debugger is active!
+2026-03-21 16:48:21,170 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:50:40,317 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:50:40,774 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 16:50:44,423 - WARNING -  * Debugger is active!
+2026-03-21 16:50:44,430 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:51:55,570 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=purchase_category%2Cpurchase_amount%2Ctime_of_purchase "HTTP/2 200 OK"
+2026-03-21 16:51:55,616 - INFO - 127.0.0.1 - - [21/Mar/2026 16:51:55] "GET /analytics/sales HTTP/1.1" 200 -
+2026-03-21 16:51:55,826 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=purchase_category%2Cpurchase_amount%2Ctime_of_purchase "HTTP/2 200 OK"
+2026-03-21 16:51:55,861 - INFO - 127.0.0.1 - - [21/Mar/2026 16:51:55] "GET /analytics/sales HTTP/1.1" 200 -
+2026-03-21 16:52:36,039 - INFO - 127.0.0.1 - - [21/Mar/2026 16:52:36] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:52:36,305 - INFO - Incoming Request Query: show sales by ctiy
+2026-03-21 16:52:36,306 - INFO - Semantic Layer applied. Enhanced query: show purchase_amount by ctiy (FILTER CONTEXT: Only include records where Purchase_Category must be 'Electronics' AND Gender must be 'Male')
+2026-03-21 16:52:37,325 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 16:52:37,351 - INFO - AI SQL Generation complete. Length: 324
+2026-03-21 16:52:37,355 - INFO - Raw SQL Generation: SELECT 
+  LOWER(TRIM(COALESCE(Location, ''))) AS city,
+  SUM(Purchase_Amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+WHERE 
+  LOWER(TRIM(COALESCE(Purchase_Category, ''))) = 'electronics'
+  AND LOWER(TRIM(COALESCE(Gender, ''))) = 'male'
+GROUP BY 
+  city
+ORDER BY 
+  total_purchase_amount DESC
+LIMIT 100;
+2026-03-21 16:52:37,355 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:52:37,355 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:52:37,355 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:52:37,357 - WARNING - VALIDATION: Potential unauthorized field detected: 'CITY'
+2026-03-21 16:52:37,357 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:52:37,358 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:52:37,358 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:52:37,358 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:52:37,358 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:52:37,358 - WARNING - VALIDATION: Potential unauthorized field detected: 'ELECTRONICS'
+2026-03-21 16:52:37,358 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:52:37,358 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:52:37,358 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:52:37,358 - WARNING - VALIDATION: Potential unauthorized field detected: 'MALE'
+2026-03-21 16:52:37,358 - WARNING - VALIDATION: Potential unauthorized field detected: 'CITY'
+2026-03-21 16:52:37,358 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:52:38,549 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:52:38,549 - INFO - Query executed successfully. Rows returned: 20
+2026-03-21 16:52:38,555 - INFO - 127.0.0.1 - - [21/Mar/2026 16:52:38] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:52:48,845 - INFO - 127.0.0.1 - - [21/Mar/2026 16:52:48] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:52:49,151 - INFO - Incoming Request Query: show sales by ctiy
+2026-03-21 16:52:49,151 - INFO - Semantic Layer applied. Enhanced query: show purchase_amount by ctiy (FILTER CONTEXT: Only include records where Purchase_Category must be 'Home Decor' AND Gender must be 'Male')
+2026-03-21 16:52:49,608 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 16:52:49,609 - INFO - AI SQL Generation complete. Length: 285
+2026-03-21 16:52:49,612 - INFO - Raw SQL Generation: SELECT 
+  LOWER(TRIM(COALESCE(Location, ''))) AS city, 
+  SUM(Purchase_Amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+WHERE 
+  LOWER(TRIM(COALESCE(Purchase_Category, ''))) = 'home decor'
+  AND LOWER(TRIM(COALESCE(Gender, ''))) = 'male'
+GROUP BY 
+  city
+LIMIT 100;
+2026-03-21 16:52:49,612 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:52:49,612 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:52:49,614 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:52:49,614 - WARNING - VALIDATION: Potential unauthorized field detected: 'CITY'
+2026-03-21 16:52:49,614 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:52:49,614 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:52:49,614 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:52:49,614 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:52:49,614 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:52:49,615 - WARNING - VALIDATION: Potential unauthorized field detected: 'HOME'
+2026-03-21 16:52:49,615 - WARNING - VALIDATION: Potential unauthorized field detected: 'DECOR'
+2026-03-21 16:52:49,616 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:52:49,616 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:52:49,616 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:52:49,616 - WARNING - VALIDATION: Potential unauthorized field detected: 'MALE'
+2026-03-21 16:52:49,616 - WARNING - VALIDATION: Potential unauthorized field detected: 'CITY'
+2026-03-21 16:52:49,753 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:52:49,850 - INFO - Query executed successfully. Rows returned: 0
+2026-03-21 16:52:49,851 - WARNING - No results found for SQL: SELECT 
+  LOWER(TRIM(COALESCE(Location, ''))) AS city, 
+  SUM(Purchase_Amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+WHERE 
+  LOWER(TRIM(COALESCE(Purchase_Category, ''))) = 'home decor'
+  AND LOWER(TRIM(COALESCE(Gender, ''))) = 'male'
+GROUP BY 
+  city
+LIMIT 100
+2026-03-21 16:52:49,852 - INFO - 127.0.0.1 - - [21/Mar/2026 16:52:49] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:53:10,589 - INFO - 127.0.0.1 - - [21/Mar/2026 16:53:10] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:53:10,895 - INFO - Incoming Request Query: show sales by ctiy
+2026-03-21 16:53:10,895 - INFO - Semantic Layer applied. Enhanced query: show purchase_amount by ctiy
+2026-03-21 16:53:10,909 - INFO - Raw SQL Generation: SELECT 
+  LOWER(TRIM(COALESCE(Location, ''))) AS city,
+  SUM(Purchase_Amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+GROUP BY 
+  LOWER(TRIM(COALESCE(Location, '')))
+ORDER BY 
+  total_purchase_amount DESC
+LIMIT 100;
+2026-03-21 16:53:10,909 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:53:10,912 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:53:10,912 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:53:10,912 - WARNING - VALIDATION: Potential unauthorized field detected: 'CITY'
+2026-03-21 16:53:10,912 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:53:10,912 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:53:10,912 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 16:53:10,912 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 16:53:10,912 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 16:53:10,912 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:53:11,401 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:53:11,405 - INFO - Query executed successfully. Rows returned: 100
+2026-03-21 16:53:11,408 - INFO - 127.0.0.1 - - [21/Mar/2026 16:53:11] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:56:16,757 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\ml_engine.py', reloading
+2026-03-21 16:56:17,238 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 16:56:20,520 - WARNING -  * Debugger is active!
+2026-03-21 16:56:20,527 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:56:28,634 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 16:56:29,055 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 16:56:32,453 - WARNING -  * Debugger is active!
+2026-03-21 16:56:32,459 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 16:59:06,110 - INFO - 127.0.0.1 - - [21/Mar/2026 16:59:06] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:59:06,364 - INFO - Incoming Request Query: Top 10 customers by purchase amount
+2026-03-21 16:59:06,364 - INFO - Semantic Layer applied. Enhanced query: Top 10 customers by purchase amount
+2026-03-21 16:59:09,309 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 16:59:09,334 - INFO - AI SQL Generation complete. Length: 165
+2026-03-21 16:59:09,337 - INFO - Raw SQL Generation: SELECT Customer_ID, SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount
+FROM ecommerce_behavior
+GROUP BY Customer_ID
+ORDER BY Total_Purchase_Amount DESC
+LIMIT 10;
+2026-03-21 16:59:09,338 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:59:09,338 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:59:09,338 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:59:10,776 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:59:10,781 - INFO - Query executed successfully. Rows returned: 10
+2026-03-21 16:59:10,786 - INFO - 127.0.0.1 - - [21/Mar/2026 16:59:10] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:59:24,675 - INFO - 127.0.0.1 - - [21/Mar/2026 16:59:24] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:59:24,984 - INFO - Incoming Request Query: Top 10 customers by purchase amount
+2026-03-21 16:59:24,984 - INFO - Semantic Layer applied. Enhanced query: Top 10 customers by purchase amount
+2026-03-21 16:59:25,005 - INFO - Raw SQL Generation: SELECT Customer_ID, SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount
+FROM ecommerce_behavior
+GROUP BY Customer_ID
+ORDER BY Total_Purchase_Amount DESC
+LIMIT 10;
+2026-03-21 16:59:25,005 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:59:25,005 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:59:25,005 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:59:25,826 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:59:25,829 - INFO - Query executed successfully. Rows returned: 10
+2026-03-21 16:59:25,830 - INFO - 127.0.0.1 - - [21/Mar/2026 16:59:25] "POST /query HTTP/1.1" 200 -
+2026-03-21 16:59:56,595 - INFO - 127.0.0.1 - - [21/Mar/2026 16:59:56] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 16:59:56,908 - INFO - Incoming Request Query: Top 10 customers by purchase amount
+2026-03-21 16:59:56,909 - INFO - Semantic Layer applied. Enhanced query: Top 10 customers by purchase amount
+2026-03-21 16:59:56,909 - INFO - Raw SQL Generation: SELECT Customer_ID, SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount
+FROM ecommerce_behavior
+GROUP BY Customer_ID
+ORDER BY Total_Purchase_Amount DESC
+LIMIT 10;
+2026-03-21 16:59:56,909 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 16:59:56,909 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:59:56,909 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 16:59:57,032 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 16:59:57,033 - INFO - Query executed successfully. Rows returned: 10
+2026-03-21 16:59:57,036 - INFO - 127.0.0.1 - - [21/Mar/2026 16:59:57] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:00:13,338 - INFO - 127.0.0.1 - - [21/Mar/2026 17:00:13] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:00:13,649 - INFO - Incoming Request Query: total sales by category
+2026-03-21 17:00:13,651 - INFO - Semantic Layer applied. Enhanced query: total purchase_amount by category
+2026-03-21 17:00:13,653 - INFO - Raw SQL Generation: SELECT 
+  LOWER(TRIM(COALESCE(purchase_category, ''))) AS purchase_category,
+  SUM(purchase_amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+GROUP BY 
+  LOWER(TRIM(COALESCE(purchase_category, '')))
+LIMIT 100;
+2026-03-21 17:00:13,654 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 17:00:13,655 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 17:00:13,655 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 17:00:13,655 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:00:13,656 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 17:00:13,656 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 17:00:13,656 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 17:00:13,656 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 17:00:13,780 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:00:13,783 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 17:00:13,787 - INFO - 127.0.0.1 - - [21/Mar/2026 17:00:13] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:00:58,538 - INFO - 127.0.0.1 - - [21/Mar/2026 17:00:58] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:00:58,845 - INFO - Incoming Request Query: total sales by category
+2026-03-21 17:00:58,847 - INFO - Semantic Layer applied. Enhanced query: total purchase_amount by category
+2026-03-21 17:00:58,847 - INFO - Raw SQL Generation: SELECT 
+  LOWER(TRIM(COALESCE(purchase_category, ''))) AS purchase_category,
+  SUM(purchase_amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+GROUP BY 
+  LOWER(TRIM(COALESCE(purchase_category, '')))
+LIMIT 100;
+2026-03-21 17:00:58,850 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 17:00:58,850 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 17:00:58,850 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 17:00:58,851 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:00:58,851 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 17:00:58,851 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 17:00:58,851 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 17:00:58,852 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 17:00:59,428 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:00:59,437 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 17:00:59,442 - INFO - 127.0.0.1 - - [21/Mar/2026 17:00:59] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:02:34,537 - INFO - 127.0.0.1 - - [21/Mar/2026 17:02:34] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:02:34,799 - INFO - Incoming Request Query: total sales by category
+2026-03-21 17:02:34,801 - INFO - Semantic Layer applied. Enhanced query: total purchase_amount by category
+2026-03-21 17:02:34,802 - INFO - Raw SQL Generation: SELECT 
+  LOWER(TRIM(COALESCE(purchase_category, ''))) AS purchase_category,
+  SUM(purchase_amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+GROUP BY 
+  LOWER(TRIM(COALESCE(purchase_category, '')))
+LIMIT 100;
+2026-03-21 17:02:34,802 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 17:02:34,803 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 17:02:34,804 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 17:02:34,804 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:02:34,804 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 17:02:34,804 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 17:02:34,805 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 17:02:34,805 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 17:02:34,973 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:02:34,975 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 17:02:34,980 - INFO - 127.0.0.1 - - [21/Mar/2026 17:02:34] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:03:46,536 - INFO - 127.0.0.1 - - [21/Mar/2026 17:03:46] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:03:46,790 - INFO - Incoming Request Query: total sales with amount > 1000000000
+2026-03-21 17:03:46,793 - INFO - Semantic Layer applied. Enhanced query: total purchase_amount with amount > 1000000000
+2026-03-21 17:03:47,063 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:03:47,065 - INFO - AI SQL Generation complete. Length: 116
+2026-03-21 17:03:47,068 - INFO - Raw SQL Generation: SELECT SUM(purchase_amount::NUMERIC) 
+FROM ecommerce_behavior 
+WHERE purchase_amount::NUMERIC > 1000000000::NUMERIC;
+2026-03-21 17:03:47,068 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:03:47,069 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:03:47,069 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:03:47,427 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:03:47,428 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 17:03:47,434 - INFO - 127.0.0.1 - - [21/Mar/2026 17:03:47] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:04:07,992 - INFO - 127.0.0.1 - - [21/Mar/2026 17:04:07] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:04:08,316 - INFO - Incoming Request Query: users with purchase amount > 1000000000
+2026-03-21 17:04:08,321 - INFO - Semantic Layer applied. Enhanced query: users with purchase amount > 1000000000
+2026-03-21 17:04:09,553 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:04:09,557 - INFO - AI SQL Generation complete. Length: 99
+2026-03-21 17:04:09,564 - INFO - Raw SQL Generation: SELECT * 
+FROM ecommerce_behavior 
+WHERE purchase_amount::NUMERIC::NUMERIC > 1000000000 
+LIMIT 100;
+2026-03-21 17:04:09,565 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:04:09,565 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:04:09,651 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:04:09,653 - INFO - Query executed successfully. Rows returned: 0
+2026-03-21 17:04:09,653 - WARNING - No results found for query: users with purchase amount > 1000000000
+2026-03-21 17:04:09,656 - INFO - 127.0.0.1 - - [21/Mar/2026 17:04:09] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:05:30,534 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 17:05:31,010 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 17:05:34,760 - WARNING -  * Debugger is active!
+2026-03-21 17:05:34,766 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 17:06:09,270 - INFO - 127.0.0.1 - - [21/Mar/2026 17:06:09] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:06:09,513 - INFO - Incoming Request Query: total sales by category
+2026-03-21 17:06:09,516 - INFO - Semantic Layer applied. Enhanced query: total purchase_amount by category
+2026-03-21 17:06:09,536 - INFO - Raw SQL Generation: SELECT 
+  LOWER(TRIM(COALESCE(purchase_category, ''))) AS purchase_category,
+  SUM(purchase_amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+GROUP BY 
+  LOWER(TRIM(COALESCE(purchase_category, '')))
+LIMIT 100;
+2026-03-21 17:06:09,538 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 17:06:09,538 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 17:06:09,538 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 17:06:09,539 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:06:09,539 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 17:06:09,539 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 17:06:09,539 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 17:06:09,539 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 17:06:10,667 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:06:10,671 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 17:06:10,681 - INFO - 127.0.0.1 - - [21/Mar/2026 17:06:10] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:06:36,873 - INFO - 127.0.0.1 - - [21/Mar/2026 17:06:36] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:06:37,184 - INFO - Incoming Request Query: purchase amount > 100000000
+2026-03-21 17:06:37,185 - INFO - Semantic Layer applied. Enhanced query: purchase amount > 100000000
+2026-03-21 17:06:37,777 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:06:37,803 - INFO - AI SQL Generation complete. Length: 98
+2026-03-21 17:06:37,806 - INFO - Raw SQL Generation: SELECT * 
+FROM ecommerce_behavior 
+WHERE purchase_amount::NUMERIC::NUMERIC > 100000000 
+LIMIT 100;
+2026-03-21 17:06:37,807 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:06:37,807 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:06:38,336 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:06:38,339 - INFO - Query executed successfully. Rows returned: 0
+2026-03-21 17:06:38,340 - WARNING - No results found for query: purchase amount > 100000000
+2026-03-21 17:06:38,341 - INFO - 127.0.0.1 - - [21/Mar/2026 17:06:38] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:07:17,467 - INFO - 127.0.0.1 - - [21/Mar/2026 17:07:17] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:07:17,787 - INFO - Incoming Request Query: purchase amount > 100000000
+2026-03-21 17:07:17,787 - INFO - Semantic Layer applied. Enhanced query: purchase amount > 100000000
+2026-03-21 17:07:17,806 - INFO - Raw SQL Generation: SELECT * 
+FROM ecommerce_behavior 
+WHERE purchase_amount::NUMERIC::NUMERIC > 100000000 
+LIMIT 100;
+2026-03-21 17:07:17,807 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:07:17,807 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:07:18,075 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:07:18,077 - INFO - Query executed successfully. Rows returned: 0
+2026-03-21 17:07:18,077 - WARNING - No results found for query: purchase amount > 100000000
+2026-03-21 17:07:18,078 - INFO - 127.0.0.1 - - [21/Mar/2026 17:07:18] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:07:35,841 - INFO - 127.0.0.1 - - [21/Mar/2026 17:07:35] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:07:36,153 - INFO - Incoming Request Query: Top 10 customers by purchase amount
+2026-03-21 17:07:36,153 - INFO - Semantic Layer applied. Enhanced query: Top 10 customers by purchase amount
+2026-03-21 17:07:36,153 - INFO - Raw SQL Generation: SELECT Customer_ID, SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount
+FROM ecommerce_behavior
+GROUP BY Customer_ID
+ORDER BY Total_Purchase_Amount DESC
+LIMIT 10;
+2026-03-21 17:07:36,155 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:07:36,155 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 17:07:36,155 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 17:07:36,474 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:07:36,474 - INFO - Query executed successfully. Rows returned: 10
+2026-03-21 17:07:36,482 - INFO - 127.0.0.1 - - [21/Mar/2026 17:07:36] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:07:52,312 - INFO - 127.0.0.1 - - [21/Mar/2026 17:07:52] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:07:52,617 - INFO - Incoming Request Query: uhuhiou
+2026-03-21 17:07:52,617 - WARNING - TERMINATED: Unclear query intent detected: uhuhiou
+2026-03-21 17:07:52,619 - INFO - 127.0.0.1 - - [21/Mar/2026 17:07:52] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 17:19:23,310 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 17:19:23,794 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 17:19:27,468 - WARNING -  * Debugger is active!
+2026-03-21 17:19:27,471 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 17:19:40,044 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 17:19:40,497 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 17:19:43,907 - WARNING -  * Debugger is active!
+2026-03-21 17:19:43,913 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 17:20:25,777 - INFO - 127.0.0.1 - - [21/Mar/2026 17:20:25] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:20:26,047 - INFO - Incoming Request Query: Top 10 customers by purchase amount
+2026-03-21 17:20:26,047 - INFO - Semantic Layer applied. Enhanced query: Top 10 customers by purchase amount
+2026-03-21 17:20:26,686 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:20:26,717 - INFO - AI SQL Generation complete. Length: 165
+2026-03-21 17:20:26,720 - INFO - Raw SQL Generation: SELECT Customer_ID, SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount
+FROM ecommerce_behavior
+GROUP BY Customer_ID
+ORDER BY Total_Purchase_Amount DESC
+LIMIT 10;
+2026-03-21 17:20:26,720 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:20:26,720 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 17:20:26,721 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 17:20:29,326 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:20:29,329 - INFO - Query executed successfully. Rows returned: 10
+2026-03-21 17:20:29,333 - INFO - 127.0.0.1 - - [21/Mar/2026 17:20:29] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:20:35,573 - INFO - 127.0.0.1 - - [21/Mar/2026 17:20:35] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:20:35,880 - INFO - Incoming Request Query: ytfuygfihgi
+2026-03-21 17:20:35,880 - WARNING - TERMINATED: Unclear query intent detected: ytfuygfihgi
+2026-03-21 17:20:35,880 - INFO - 127.0.0.1 - - [21/Mar/2026 17:20:35] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 17:24:24,775 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 17:24:25,259 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 17:24:28,891 - WARNING -  * Debugger is active!
+2026-03-21 17:24:28,900 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 17:24:36,630 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 17:24:37,102 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 17:24:40,467 - WARNING -  * Debugger is active!
+2026-03-21 17:24:40,472 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 17:25:29,371 - INFO - 127.0.0.1 - - [21/Mar/2026 17:25:29] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:25:29,622 - INFO - Incoming Request Query: ytfuygfihgi
+2026-03-21 17:25:29,623 - WARNING - TERMINATED: Unclear query intent detected: ytfuygfihgi
+2026-03-21 17:25:29,624 - INFO - 127.0.0.1 - - [21/Mar/2026 17:25:29] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 17:25:51,955 - INFO - 127.0.0.1 - - [21/Mar/2026 17:25:51] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:25:52,258 - INFO - Incoming Request Query: Top 5 locations by purchase amount
+2026-03-21 17:25:52,258 - INFO - 127.0.0.1 - - [21/Mar/2026 17:25:52] "[35m[1mPOST /query HTTP/1.1[0m" 500 -
+2026-03-21 17:25:54,861 - INFO - Incoming Request Query: Top 5 locations by purchase amount
+2026-03-21 17:25:54,862 - INFO - 127.0.0.1 - - [21/Mar/2026 17:25:54] "[35m[1mPOST /query HTTP/1.1[0m" 500 -
+2026-03-21 17:25:55,993 - INFO - Incoming Request Query: Top 5 locations by purchase amount
+2026-03-21 17:25:55,993 - INFO - 127.0.0.1 - - [21/Mar/2026 17:25:55] "[35m[1mPOST /query HTTP/1.1[0m" 500 -
+2026-03-21 17:25:56,620 - INFO - Incoming Request Query: Top 5 locations by purchase amount
+2026-03-21 17:25:56,622 - INFO - 127.0.0.1 - - [21/Mar/2026 17:25:56] "[35m[1mPOST /query HTTP/1.1[0m" 500 -
+2026-03-21 17:25:57,743 - INFO - 127.0.0.1 - - [21/Mar/2026 17:25:57] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:25:57,993 - INFO - Incoming Request Query: Top 5 locations by purchase amount
+2026-03-21 17:25:57,993 - INFO - 127.0.0.1 - - [21/Mar/2026 17:25:57] "[35m[1mPOST /query HTTP/1.1[0m" 500 -
+2026-03-21 17:26:25,684 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 17:26:26,152 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 17:26:29,608 - WARNING -  * Debugger is active!
+2026-03-21 17:26:29,614 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 17:27:01,242 - INFO - 127.0.0.1 - - [21/Mar/2026 17:27:01] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:27:01,487 - INFO - Incoming Request Query: total sales by category
+2026-03-21 17:27:01,488 - INFO - Semantic Layer applied. Enhanced query: total purchase_amount by category
+2026-03-21 17:27:02,038 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:27:02,063 - INFO - AI SQL Generation complete. Length: 258
+2026-03-21 17:27:02,066 - INFO - Raw SQL Generation: SELECT 
+  LOWER(TRIM(COALESCE(purchase_category, ''))) AS category,
+  SUM(purchase_amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+GROUP BY 
+  LOWER(TRIM(COALESCE(purchase_category, '')))
+ORDER BY 
+  total_purchase_amount DESC
+LIMIT 100;
+2026-03-21 17:27:02,067 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 17:27:02,067 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 17:27:02,067 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 17:27:02,067 - WARNING - VALIDATION: Potential unauthorized field detected: 'CATEGORY'
+2026-03-21 17:27:02,067 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:27:02,067 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 17:27:02,070 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 17:27:02,070 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 17:27:02,070 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 17:27:02,071 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 17:27:03,440 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:27:03,440 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 17:27:03,449 - INFO - 127.0.0.1 - - [21/Mar/2026 17:27:03] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:30:08,663 - INFO - 127.0.0.1 - - [21/Mar/2026 17:30:08] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:30:08,918 - INFO - Incoming Request Query: total sales by category
+2026-03-21 17:30:08,918 - INFO - Semantic Layer applied. Enhanced query: total purchase_amount by category
+2026-03-21 17:30:08,932 - INFO - Raw SQL Generation: SELECT 
+  LOWER(TRIM(COALESCE(purchase_category, ''))) AS category,
+  SUM(purchase_amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+GROUP BY 
+  LOWER(TRIM(COALESCE(purchase_category, '')))
+ORDER BY 
+  total_purchase_amount DESC
+LIMIT 100;
+2026-03-21 17:30:08,932 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 17:30:08,933 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 17:30:08,933 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 17:30:08,934 - WARNING - VALIDATION: Potential unauthorized field detected: 'CATEGORY'
+2026-03-21 17:30:08,934 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:30:08,934 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 17:30:08,934 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 17:30:08,934 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 17:30:08,934 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 17:30:08,934 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 17:30:09,663 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:30:09,663 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 17:30:09,670 - INFO - 127.0.0.1 - - [21/Mar/2026 17:30:09] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:30:14,352 - INFO - 127.0.0.1 - - [21/Mar/2026 17:30:14] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:30:14,655 - INFO - Incoming Request Query: ytrutfuyg
+2026-03-21 17:30:14,655 - WARNING - TERMINATED: Unclear query intent detected: ytrutfuyg
+2026-03-21 17:30:14,658 - INFO - 127.0.0.1 - - [21/Mar/2026 17:30:14] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 17:34:07,197 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 17:34:07,677 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 17:34:11,222 - WARNING -  * Debugger is active!
+2026-03-21 17:34:11,228 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 17:34:13,659 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 17:34:14,188 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 17:34:17,784 - WARNING -  * Debugger is active!
+2026-03-21 17:34:17,789 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 17:34:21,402 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 17:34:21,866 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 17:34:25,218 - WARNING -  * Debugger is active!
+2026-03-21 17:34:25,224 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 17:35:00,229 - INFO - 127.0.0.1 - - [21/Mar/2026 17:35:00] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:35:00,484 - INFO - Incoming Request Query: ytrutfuyg
+2026-03-21 17:35:00,484 - WARNING - TERMINATED: Unclear query intent detected: ytrutfuyg
+2026-03-21 17:35:00,486 - INFO - 127.0.0.1 - - [21/Mar/2026 17:35:00] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 17:35:20,610 - INFO - 127.0.0.1 - - [21/Mar/2026 17:35:20] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:35:20,914 - INFO - Incoming Request Query: Top 10 customers by purchase amount
+2026-03-21 17:35:20,914 - INFO - Semantic Layer applied. Enhanced query: Top 10 customers by purchase amount
+2026-03-21 17:35:21,457 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:35:21,488 - INFO - AI SQL Generation complete. Length: 99
+2026-03-21 17:35:21,491 - INFO - Raw SQL Generation: SELECT Customer_ID, Purchase_Amount
+FROM ecommerce_behavior
+ORDER BY Purchase_Amount DESC
+LIMIT 10;
+2026-03-21 17:35:23,230 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:35:23,233 - INFO - Query executed successfully. Rows returned: 10
+2026-03-21 17:35:23,320 - INFO - 127.0.0.1 - - [21/Mar/2026 17:35:23] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:39:06,907 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 17:39:07,391 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 17:39:10,920 - WARNING -  * Debugger is active!
+2026-03-21 17:39:10,927 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 17:39:18,399 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 17:39:18,812 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 17:39:22,336 - WARNING -  * Debugger is active!
+2026-03-21 17:39:22,338 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 17:39:54,834 - INFO - 127.0.0.1 - - [21/Mar/2026 17:39:54] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:39:55,084 - INFO - Incoming Request Query: Top 10 customers by purchase amount
+2026-03-21 17:39:55,086 - INFO - Semantic Layer applied. Enhanced query: Top 10 customers by purchase amount
+2026-03-21 17:39:55,574 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:39:55,606 - INFO - AI SQL Generation complete. Length: 99
+2026-03-21 17:39:55,610 - INFO - Raw SQL Generation: SELECT Customer_ID, Purchase_Amount
+FROM ecommerce_behavior
+ORDER BY Purchase_Amount DESC
+LIMIT 10;
+2026-03-21 17:39:57,340 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:39:57,342 - INFO - Query executed successfully. Rows returned: 10
+2026-03-21 17:39:57,415 - INFO - 127.0.0.1 - - [21/Mar/2026 17:39:57] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:40:01,598 - INFO - 127.0.0.1 - - [21/Mar/2026 17:40:01] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:40:01,902 - INFO - Incoming Request Query: tryhrtyu6
+2026-03-21 17:40:01,904 - WARNING - TERMINATED: Unclear query intent detected: tryhrtyu6
+2026-03-21 17:40:01,905 - INFO - 127.0.0.1 - - [21/Mar/2026 17:40:01] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 17:45:25,657 - INFO - 127.0.0.1 - - [21/Mar/2026 17:45:25] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:45:25,907 - INFO - Incoming Request Query: What is the total revenue?
+2026-03-21 17:45:25,907 - INFO - Semantic Layer applied. Enhanced query: What is the total purchase_amount?
+2026-03-21 17:45:28,149 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:45:28,151 - INFO - AI SQL Generation complete. Length: 87
+2026-03-21 17:45:28,153 - INFO - Raw SQL Generation: SELECT SUM(purchase_amount::NUMERIC) AS total_purchase_amount 
+FROM ecommerce_behavior;
+2026-03-21 17:45:28,153 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:45:28,153 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 17:45:29,025 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:45:29,027 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 17:45:29,029 - INFO - 127.0.0.1 - - [21/Mar/2026 17:45:29] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:45:44,486 - INFO - 127.0.0.1 - - [21/Mar/2026 17:45:44] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:45:44,797 - INFO - Incoming Request Query: What is the total revenue?
+2026-03-21 17:45:44,797 - WARNING - TERMINATED: Unauthorized field 'total_purchase_amount'
+2026-03-21 17:45:44,797 - INFO - 127.0.0.1 - - [21/Mar/2026 17:45:44] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 17:46:44,043 - INFO - 127.0.0.1 - - [21/Mar/2026 17:46:44] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:46:44,347 - INFO - Incoming Request Query: What is the average purchase amount?
+2026-03-21 17:46:44,349 - INFO - Semantic Layer applied. Enhanced query: What is the average purchase amount?
+2026-03-21 17:46:45,405 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:46:45,405 - INFO - AI SQL Generation complete. Length: 89
+2026-03-21 17:46:45,409 - INFO - Raw SQL Generation: SELECT AVG(purchase_amount::NUMERIC) AS average_purchase_amount 
+FROM ecommerce_behavior;
+2026-03-21 17:46:45,409 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:46:45,410 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVERAGE_PURCHASE_AMOUNT'
+2026-03-21 17:46:45,686 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:46:45,688 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 17:46:45,688 - INFO - 127.0.0.1 - - [21/Mar/2026 17:46:45] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:48:01,639 - INFO - 127.0.0.1 - - [21/Mar/2026 17:48:01] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:48:01,906 - INFO - Incoming Request Query: What is the highest purchase amount?
+2026-03-21 17:48:01,907 - INFO - Semantic Layer applied. Enhanced query: What is the highest purchase amount?
+2026-03-21 17:48:03,750 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:48:03,755 - INFO - AI SQL Generation complete. Length: 88
+2026-03-21 17:48:03,756 - INFO - Raw SQL Generation: SELECT purchase_amount 
+FROM ecommerce_behavior 
+ORDER BY purchase_amount DESC 
+LIMIT 5;
+2026-03-21 17:48:04,161 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:48:04,162 - INFO - Query executed successfully. Rows returned: 5
+2026-03-21 17:48:04,164 - INFO - 127.0.0.1 - - [21/Mar/2026 17:48:04] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:49:23,941 - INFO - 127.0.0.1 - - [21/Mar/2026 17:49:23] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:49:24,199 - INFO - Incoming Request Query: Which category has highest sales?
+2026-03-21 17:49:24,200 - INFO - Semantic Layer applied. Enhanced query: Which category has highest purchase_amount?
+2026-03-21 17:49:24,458 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:49:24,459 - INFO - AI SQL Generation complete. Length: 158
+2026-03-21 17:49:24,463 - INFO - Raw SQL Generation: SELECT purchase_category, SUM(purchase_amount::NUMERIC) AS total_amount
+FROM ecommerce_behavior
+GROUP BY purchase_category
+ORDER BY total_amount DESC
+LIMIT 5;
+2026-03-21 17:49:24,464 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:49:24,464 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 17:49:24,464 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 17:49:24,577 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:49:24,580 - INFO - Query executed successfully. Rows returned: 5
+2026-03-21 17:49:24,582 - INFO - 127.0.0.1 - - [21/Mar/2026 17:49:24] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:50:06,317 - INFO - 127.0.0.1 - - [21/Mar/2026 17:50:06] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:50:06,627 - INFO - Incoming Request Query: What percentage of users used discount?
+2026-03-21 17:50:06,627 - INFO - Semantic Layer applied. Enhanced query: What percentage of users used discount?
+2026-03-21 17:50:07,179 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:50:07,180 - INFO - AI SQL Generation complete. Length: 148
+2026-03-21 17:50:07,183 - INFO - Raw SQL Generation: SELECT 
+  (COUNT(CASE WHEN LOWER(TRIM(COALESCE(Discount_Used, ''))) = 'yes' THEN 1 END) * 100.0 / COUNT(*)) 
+AS percentage 
+FROM ecommerce_behavior;
+2026-03-21 17:50:07,184 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 17:50:07,184 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 17:50:07,184 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 17:50:07,184 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 17:50:08,096 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:50:08,097 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 17:50:08,099 - INFO - 127.0.0.1 - - [21/Mar/2026 17:50:08] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:50:37,565 - INFO - 127.0.0.1 - - [21/Mar/2026 17:50:37] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:50:37,868 - INFO - Incoming Request Query: Show total sales where discount was used
+2026-03-21 17:50:37,870 - INFO - Semantic Layer applied. Enhanced query: Show total purchase_amount where discount was used
+2026-03-21 17:50:38,305 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:50:38,308 - INFO - AI SQL Generation complete. Length: 118
+2026-03-21 17:50:38,311 - INFO - Raw SQL Generation: SELECT SUM(purchase_amount::NUMERIC) 
+FROM ecommerce_behavior 
+WHERE LOWER(TRIM(COALESCE(discount_used, ''))) = 'yes';
+2026-03-21 17:50:38,311 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:50:38,312 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 17:50:38,312 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 17:50:38,312 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 17:50:38,312 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 17:50:38,584 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:50:38,584 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 17:50:38,586 - INFO - 127.0.0.1 - - [21/Mar/2026 17:50:38] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:51:31,851 - INFO - 127.0.0.1 - - [21/Mar/2026 17:51:31] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:51:32,169 - INFO - Incoming Request Query: Show users with purchase amount greater than 100000
+2026-03-21 17:51:32,170 - INFO - Semantic Layer applied. Enhanced query: Show users with purchase amount greater than 100000
+2026-03-21 17:51:32,411 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:51:32,412 - INFO - AI SQL Generation complete. Length: 94
+2026-03-21 17:51:32,414 - INFO - Raw SQL Generation: SELECT * 
+FROM ecommerce_behavior 
+WHERE purchase_amount::NUMERIC > 100000::NUMERIC
+LIMIT 100;
+2026-03-21 17:51:32,414 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:51:32,414 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 17:51:32,566 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:51:32,566 - INFO - Query executed successfully. Rows returned: 0
+2026-03-21 17:51:32,566 - WARNING - No results found for query: Show users with purchase amount greater than 100000
+2026-03-21 17:51:32,566 - INFO - 127.0.0.1 - - [21/Mar/2026 17:51:32] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:51:47,227 - INFO - 127.0.0.1 - - [21/Mar/2026 17:51:47] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:51:47,531 - INFO - Incoming Request Query: asdjkhaskjdh query random test
+2026-03-21 17:51:47,531 - INFO - Semantic Layer applied. Enhanced query: asdjkhaskjdh query random test
+2026-03-21 17:51:47,907 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 17:51:47,911 - INFO - AI SQL Generation complete. Length: 52
+2026-03-21 17:51:47,913 - INFO - Raw SQL Generation: SELECT COUNT(*) 
+FROM ecommerce_behavior 
+LIMIT 100;
+2026-03-21 17:51:48,005 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:51:48,008 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 17:51:48,009 - INFO - 127.0.0.1 - - [21/Mar/2026 17:51:48] "POST /query HTTP/1.1" 200 -
+2026-03-21 17:51:55,456 - INFO - 127.0.0.1 - - [21/Mar/2026 17:51:55] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:51:55,767 - INFO - Incoming Request Query: fgtrghtr4hg5thb
+2026-03-21 17:51:55,767 - WARNING - TERMINATED: Unclear query intent detected: fgtrghtr4hg5thb
+2026-03-21 17:51:55,767 - INFO - 127.0.0.1 - - [21/Mar/2026 17:51:55] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 17:52:07,363 - INFO - 127.0.0.1 - - [21/Mar/2026 17:52:07] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 17:52:07,670 - INFO - Incoming Request Query: asdjkhaskjdh query random test
+2026-03-21 17:52:07,670 - INFO - Semantic Layer applied. Enhanced query: asdjkhaskjdh query random test
+2026-03-21 17:52:07,686 - INFO - Raw SQL Generation: SELECT COUNT(*) 
+FROM ecommerce_behavior 
+LIMIT 100;
+2026-03-21 17:52:08,171 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 17:52:08,172 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 17:52:08,172 - INFO - 127.0.0.1 - - [21/Mar/2026 17:52:08] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:26:38,131 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 18:26:38,600 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 18:27:10,460 - WARNING -  * Debugger is active!
+2026-03-21 18:27:10,463 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 18:28:42,816 - INFO - 127.0.0.1 - - [21/Mar/2026 18:28:42] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:28:43,065 - INFO - Incoming Request Query: asdjkhaskjdh query random test
+2026-03-21 18:28:43,572 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:28:43,592 - WARNING - BLOCKED: Invalid query detected: asdjkhaskjdh query random test
+2026-03-21 18:28:43,593 - INFO - Raw SQL Generation: None
+2026-03-21 18:28:43,593 - WARNING - TERMINATED: SQL generation failed for: asdjkhaskjdh query random test
+2026-03-21 18:28:43,594 - INFO - 127.0.0.1 - - [21/Mar/2026 18:28:43] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 18:29:12,066 - INFO - 127.0.0.1 - - [21/Mar/2026 18:29:12] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:29:12,382 - INFO - Incoming Request Query: Show sales by category
+2026-03-21 18:29:12,621 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:29:12,622 - INFO - Semantic Layer applied. Enhanced query: Show purchase_amount by category
+2026-03-21 18:29:12,927 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:29:12,936 - INFO - AI SQL Generation complete. Length: 154
+2026-03-21 18:29:12,941 - INFO - Raw SQL Generation: SELECT purchase_category, SUM(purchase_amount::NUMERIC) 
+FROM ecommerce_behavior 
+GROUP BY purchase_category 
+ORDER BY SUM(purchase_amount::NUMERIC) DESC;
+2026-03-21 18:29:12,941 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:29:12,941 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:29:14,772 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:29:14,774 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 18:29:14,788 - INFO - 127.0.0.1 - - [21/Mar/2026 18:29:14] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:29:31,342 - INFO - 127.0.0.1 - - [21/Mar/2026 18:29:31] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:29:31,652 - INFO - Incoming Request Query: fhfghftghtf
+2026-03-21 18:29:31,652 - WARNING - TERMINATED: Unclear query intent detected: fhfghftghtf
+2026-03-21 18:29:31,653 - INFO - 127.0.0.1 - - [21/Mar/2026 18:29:31] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 18:29:48,936 - INFO - 127.0.0.1 - - [21/Mar/2026 18:29:48] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:29:49,241 - INFO - Incoming Request Query: Show spending by category
+2026-03-21 18:29:49,366 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:29:49,366 - INFO - Semantic Layer applied. Enhanced query: Show purchase_amount by category
+2026-03-21 18:29:49,383 - INFO - Raw SQL Generation: SELECT purchase_category, SUM(purchase_amount::NUMERIC) 
+FROM ecommerce_behavior 
+GROUP BY purchase_category 
+ORDER BY SUM(purchase_amount::NUMERIC) DESC;
+2026-03-21 18:29:49,383 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:29:49,383 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:29:49,691 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:29:49,691 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 18:29:49,695 - INFO - 127.0.0.1 - - [21/Mar/2026 18:29:49] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:30:21,996 - INFO - 127.0.0.1 - - [21/Mar/2026 18:30:21] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:30:22,305 - INFO - Incoming Request Query: Discount usage ratio
+2026-03-21 18:30:22,462 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:30:22,464 - INFO - Semantic Layer applied. Enhanced query: Discount usage ratio
+2026-03-21 18:30:22,870 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:30:22,872 - INFO - AI SQL Generation complete. Length: 163
+2026-03-21 18:30:22,874 - INFO - Raw SQL Generation: SELECT 
+  (COUNT(CASE WHEN LOWER(TRIM(COALESCE(Discount_Used, ''))) = 'yes' THEN 1 END) * 100.0 / COUNT(*)) 
+  AS discount_usage_ratio 
+FROM 
+  ecommerce_behavior;
+2026-03-21 18:30:22,874 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 18:30:22,876 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 18:30:22,876 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 18:30:22,877 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 18:30:22,877 - WARNING - VALIDATION: Potential unauthorized field detected: 'DISCOUNT_USAGE_RATIO'
+2026-03-21 18:30:23,077 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:30:23,077 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 18:30:23,077 - INFO - 127.0.0.1 - - [21/Mar/2026 18:30:23] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:30:36,718 - INFO - 127.0.0.1 - - [21/Mar/2026 18:30:36] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:30:37,027 - INFO - Incoming Request Query: Top category by revenue
+2026-03-21 18:30:37,308 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:30:37,311 - INFO - Semantic Layer applied. Enhanced query: Top category by purchase_amount
+2026-03-21 18:30:37,719 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:30:37,722 - INFO - AI SQL Generation complete. Length: 158
+2026-03-21 18:30:37,724 - INFO - Raw SQL Generation: SELECT purchase_category, SUM(purchase_amount::NUMERIC) AS total_amount
+FROM ecommerce_behavior
+GROUP BY purchase_category
+ORDER BY total_amount DESC
+LIMIT 5;
+2026-03-21 18:30:37,726 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:30:37,726 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 18:30:37,727 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 18:30:37,919 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:30:37,920 - INFO - Query executed successfully. Rows returned: 5
+2026-03-21 18:30:37,923 - INFO - 127.0.0.1 - - [21/Mar/2026 18:30:37] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:30:56,724 - INFO - 127.0.0.1 - - [21/Mar/2026 18:30:56] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:30:57,028 - INFO - Incoming Request Query: Compare sales between categories
+2026-03-21 18:30:57,280 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:30:57,280 - INFO - Semantic Layer applied. Enhanced query: Compare purchase_amount between categories
+2026-03-21 18:30:57,688 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:30:57,689 - INFO - AI SQL Generation complete. Length: 326
+2026-03-21 18:30:57,689 - INFO - Raw SQL Generation: SELECT 
+  Purchase_Category, 
+  SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount,
+  AVG(Purchase_Amount::NUMERIC) AS Average_Purchase_Amount,
+  MAX(Purchase_Amount::NUMERIC) AS Max_Purchase_Amount,
+  MIN(Purchase_Amount::NUMERIC) AS Min_Purchase_Amount
+FROM 
+  ecommerce_behavior
+GROUP BY 
+  Purchase_Category
+LIMIT 100;
+2026-03-21 18:30:57,694 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:30:57,694 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 18:30:57,694 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:30:57,694 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVERAGE_PURCHASE_AMOUNT'
+2026-03-21 18:30:57,694 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:30:57,694 - WARNING - VALIDATION: Potential unauthorized field detected: 'MAX_PURCHASE_AMOUNT'
+2026-03-21 18:30:57,694 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:30:57,694 - WARNING - VALIDATION: Potential unauthorized field detected: 'MIN_PURCHASE_AMOUNT'
+2026-03-21 18:30:57,807 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:30:57,807 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 18:30:57,816 - INFO - 127.0.0.1 - - [21/Mar/2026 18:30:57] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:31:24,603 - INFO - 127.0.0.1 - - [21/Mar/2026 18:31:24] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:31:24,911 - INFO - Incoming Request Query: Show top 3 categories by total sales where discount was used
+2026-03-21 18:31:25,236 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:31:25,238 - INFO - Semantic Layer applied. Enhanced query: Show top 3 categories by total purchase_amount where discount was used
+2026-03-21 18:31:25,646 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:31:25,647 - INFO - AI SQL Generation complete. Length: 249
+2026-03-21 18:31:25,650 - INFO - Raw SQL Generation: SELECT 
+  Purchase_Category, 
+  SUM(Purchase_Amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+WHERE 
+  LOWER(TRIM(COALESCE(Discount_Used, ''))) = 'yes'
+GROUP BY 
+  Purchase_Category
+ORDER BY 
+  total_purchase_amount DESC
+LIMIT 3;
+2026-03-21 18:31:25,650 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:31:25,650 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 18:31:25,653 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 18:31:25,653 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 18:31:25,653 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 18:31:25,654 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 18:31:25,654 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 18:31:25,850 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:31:25,850 - INFO - Query executed successfully. Rows returned: 0
+2026-03-21 18:31:25,850 - WARNING - No results found for query: Show top 3 categories by total purchase_amount where discount was used
+2026-03-21 18:31:25,850 - INFO - 127.0.0.1 - - [21/Mar/2026 18:31:25] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:33:11,206 - INFO - 127.0.0.1 - - [21/Mar/2026 18:33:11] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:33:11,460 - INFO - Incoming Request Query: Show top 3 categories by total sales where discount was used
+2026-03-21 18:33:11,700 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:33:11,702 - INFO - Semantic Layer applied. Enhanced query: Show top 3 categories by total purchase_amount where discount was used
+2026-03-21 18:33:11,719 - INFO - Raw SQL Generation: SELECT 
+  Purchase_Category, 
+  SUM(Purchase_Amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+WHERE 
+  LOWER(TRIM(COALESCE(Discount_Used, ''))) = 'yes'
+GROUP BY 
+  Purchase_Category
+ORDER BY 
+  total_purchase_amount DESC
+LIMIT 3;
+2026-03-21 18:33:11,719 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:33:11,719 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 18:33:11,721 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 18:33:11,721 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 18:33:11,721 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 18:33:11,721 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 18:33:11,722 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 18:33:12,262 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:33:12,263 - INFO - Query executed successfully. Rows returned: 0
+2026-03-21 18:33:12,263 - WARNING - No results found for query: Show top 3 categories by total purchase_amount where discount was used
+2026-03-21 18:33:12,263 - INFO - 127.0.0.1 - - [21/Mar/2026 18:33:12] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:33:50,374 - INFO - 127.0.0.1 - - [21/Mar/2026 18:33:50] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:33:50,686 - INFO - Incoming Request Query: Show top 3 categories by total sales where discount was used
+2026-03-21 18:33:50,854 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:33:50,855 - INFO - Semantic Layer applied. Enhanced query: Show top 3 categories by total purchase_amount where discount was used
+2026-03-21 18:33:50,856 - INFO - Raw SQL Generation: SELECT 
+  Purchase_Category, 
+  SUM(Purchase_Amount::NUMERIC) AS total_purchase_amount
+FROM 
+  ecommerce_behavior
+WHERE 
+  LOWER(TRIM(COALESCE(Discount_Used, ''))) = 'yes'
+GROUP BY 
+  Purchase_Category
+ORDER BY 
+  total_purchase_amount DESC
+LIMIT 3;
+2026-03-21 18:33:50,856 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:33:50,857 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 18:33:50,857 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 18:33:50,857 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 18:33:50,857 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 18:33:50,857 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 18:33:50,857 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_PURCHASE_AMOUNT'
+2026-03-21 18:33:51,120 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:33:51,122 - INFO - Query executed successfully. Rows returned: 0
+2026-03-21 18:33:51,123 - WARNING - No results found for query: Show top 3 categories by total purchase_amount where discount was used
+2026-03-21 18:33:51,123 - INFO - 127.0.0.1 - - [21/Mar/2026 18:33:51] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:34:07,864 - INFO - 127.0.0.1 - - [21/Mar/2026 18:34:07] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:34:08,174 - INFO - Incoming Request Query: 10 Top 5 locations by purchase amount
+2026-03-21 18:34:08,368 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:34:08,369 - INFO - Semantic Layer applied. Enhanced query: 10 Top 5 locations by purchase amount
+2026-03-21 18:34:08,772 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:34:08,777 - INFO - AI SQL Generation complete. Length: 155
+2026-03-21 18:34:08,777 - INFO - Raw SQL Generation: SELECT 
+  Location, 
+  SUM(Purchase_Amount::NUMERIC) AS total_amount
+FROM 
+  ecommerce_behavior
+GROUP BY 
+  Location
+ORDER BY 
+  total_amount DESC
+LIMIT 5;
+2026-03-21 18:34:08,780 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:34:08,780 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 18:34:08,780 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 18:34:08,950 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:34:08,952 - INFO - Query executed successfully. Rows returned: 5
+2026-03-21 18:34:08,958 - INFO - 127.0.0.1 - - [21/Mar/2026 18:34:08] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:34:48,992 - INFO - 127.0.0.1 - - [21/Mar/2026 18:34:48] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:34:49,299 - INFO - Incoming Request Query: 10 Top 5 locations by purchaseplaces
+2026-03-21 18:34:49,533 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:34:49,535 - INFO - Semantic Layer applied. Enhanced query: 10 Top 5 locations by purchaseplaces
+2026-03-21 18:34:49,939 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:34:49,943 - INFO - AI SQL Generation complete. Length: 162
+2026-03-21 18:34:49,947 - INFO - Raw SQL Generation: SELECT LOWER(TRIM(COALESCE(Location, ''))) AS location, COUNT(*) AS purchase_count
+FROM ecommerce_behavior
+GROUP BY Location
+ORDER BY purchase_count DESC
+LIMIT 5;
+2026-03-21 18:34:49,948 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 18:34:49,948 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 18:34:49,948 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 18:34:49,948 - WARNING - VALIDATION: Potential unauthorized field detected: 'PURCHASE_COUNT'
+2026-03-21 18:34:49,949 - WARNING - VALIDATION: Potential unauthorized field detected: 'PURCHASE_COUNT'
+2026-03-21 18:34:50,111 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:34:50,113 - INFO - Query executed successfully. Rows returned: 5
+2026-03-21 18:34:50,118 - INFO - 127.0.0.1 - - [21/Mar/2026 18:34:50] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:35:17,345 - INFO - 127.0.0.1 - - [21/Mar/2026 18:35:17] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:35:17,657 - INFO - Incoming Request Query: 10 Top 5 locations by purchaseplaces
+2026-03-21 18:35:17,794 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:35:17,797 - INFO - Semantic Layer applied. Enhanced query: 10 Top 5 locations by purchaseplaces
+2026-03-21 18:35:17,814 - INFO - Raw SQL Generation: SELECT LOWER(TRIM(COALESCE(Location, ''))) AS location, COUNT(*) AS purchase_count
+FROM ecommerce_behavior
+GROUP BY Location
+ORDER BY purchase_count DESC
+LIMIT 5;
+2026-03-21 18:35:17,814 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 18:35:17,814 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 18:35:17,814 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 18:35:17,815 - WARNING - VALIDATION: Potential unauthorized field detected: 'PURCHASE_COUNT'
+2026-03-21 18:35:17,815 - WARNING - VALIDATION: Potential unauthorized field detected: 'PURCHASE_COUNT'
+2026-03-21 18:35:18,512 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:35:18,512 - INFO - Query executed successfully. Rows returned: 5
+2026-03-21 18:35:18,516 - INFO - 127.0.0.1 - - [21/Mar/2026 18:35:18] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:41:01,393 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 18:41:01,865 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 18:41:05,313 - WARNING -  * Debugger is active!
+2026-03-21 18:41:05,321 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 18:42:38,580 - INFO - 127.0.0.1 - - [21/Mar/2026 18:42:38] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:42:38,845 - INFO - Incoming Request Query: highest average sales
+2026-03-21 18:42:39,366 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:42:39,390 - INFO - Semantic Layer applied. Enhanced query: highest average purchase_amount
+2026-03-21 18:42:39,774 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:42:39,786 - INFO - AI SQL Generation complete. Length: 139
+2026-03-21 18:42:39,788 - INFO - Raw SQL Generation Attempt for: highest average purchase_amount
+2026-03-21 18:42:39,788 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:42:39,788 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVERAGE_PURCHASE_AMOUNT'
+2026-03-21 18:42:39,788 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:42:41,311 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:42:41,312 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 18:42:41,316 - INFO - 127.0.0.1 - - [21/Mar/2026 18:42:41] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:43:28,686 - INFO - 127.0.0.1 - - [21/Mar/2026 18:43:28] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:43:28,991 - INFO - Incoming Request Query: percentage of discount used
+2026-03-21 18:43:29,236 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:43:29,236 - INFO - Semantic Layer applied. Enhanced query: percentage of discount used
+2026-03-21 18:43:29,646 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:43:29,647 - INFO - AI SQL Generation complete. Length: 144
+2026-03-21 18:43:29,651 - INFO - Raw SQL Generation Attempt for: percentage of discount used
+2026-03-21 18:43:29,651 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 18:43:29,651 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 18:43:29,651 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 18:43:29,651 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 18:43:29,651 - WARNING - VALIDATION: Potential unauthorized field detected: 'NULLIF'
+2026-03-21 18:43:30,158 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:43:30,159 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 18:43:30,159 - INFO - 127.0.0.1 - - [21/Mar/2026 18:43:30] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:44:31,839 - INFO - 127.0.0.1 - - [21/Mar/2026 18:44:31] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:44:32,089 - INFO - Incoming Request Query: dfgrg
+2026-03-21 18:44:32,089 - WARNING - TERMINATED: Unclear query intent detected: dfgrg
+2026-03-21 18:44:32,089 - INFO - 127.0.0.1 - - [21/Mar/2026 18:44:32] "[31m[1mPOST /query HTTP/1.1[0m" 400 -
+2026-03-21 18:50:23,290 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 18:50:23,726 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 18:50:27,301 - WARNING -  * Debugger is active!
+2026-03-21 18:50:27,308 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 18:50:32,672 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\nl_to_sql_api.py', reloading
+2026-03-21 18:50:33,169 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 18:50:36,648 - WARNING -  * Debugger is active!
+2026-03-21 18:50:36,652 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 18:52:17,015 - INFO - 127.0.0.1 - - [21/Mar/2026 18:52:17] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:52:17,278 - INFO - Incoming Request Query: list all customers
+2026-03-21 18:52:17,854 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:52:17,878 - INFO - Semantic Layer applied. Enhanced query: list all customers
+2026-03-21 18:52:18,155 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:52:18,166 - INFO - AI SQL Generation complete. Length: 32
+2026-03-21 18:52:18,170 - INFO - Raw SQL Generation Attempt for: list all customers
+2026-03-21 18:52:20,097 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:52:20,136 - INFO - Query executed successfully. Rows returned: 1000
+2026-03-21 18:52:20,407 - INFO - 127.0.0.1 - - [21/Mar/2026 18:52:20] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:53:11,387 - INFO - 127.0.0.1 - - [21/Mar/2026 18:53:11] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:53:11,697 - INFO - Incoming Request Query: top 3 products by revenue
+2026-03-21 18:53:11,830 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:53:11,830 - INFO - Semantic Layer applied. Enhanced query: top 3 products by purchase_amount
+2026-03-21 18:53:12,591 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:53:12,594 - INFO - AI SQL Generation complete. Length: 159
+2026-03-21 18:53:12,597 - INFO - Raw SQL Generation Attempt for: top 3 products by purchase_amount
+2026-03-21 18:53:12,598 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:53:12,598 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_SALES'
+2026-03-21 18:53:12,598 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_SALES'
+2026-03-21 18:53:12,788 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:53:12,788 - INFO - Query executed successfully. Rows returned: 3
+2026-03-21 18:53:12,790 - INFO - 127.0.0.1 - - [21/Mar/2026 18:53:12] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:53:45,435 - INFO - 127.0.0.1 - - [21/Mar/2026 18:53:45] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:53:45,739 - INFO - Incoming Request Query: percentage of discount used
+2026-03-21 18:53:45,914 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:53:45,917 - INFO - Semantic Layer applied. Enhanced query: percentage of discount used
+2026-03-21 18:53:46,222 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:53:46,225 - INFO - AI SQL Generation complete. Length: 144
+2026-03-21 18:53:46,229 - INFO - Raw SQL Generation Attempt for: percentage of discount used
+2026-03-21 18:53:46,230 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 18:53:46,230 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 18:53:46,230 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 18:53:46,231 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 18:53:46,232 - WARNING - VALIDATION: Potential unauthorized field detected: 'NULLIF'
+2026-03-21 18:53:46,427 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:53:46,427 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 18:53:46,430 - INFO - 127.0.0.1 - - [21/Mar/2026 18:53:46] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:57:19,323 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 18:57:19,864 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 18:57:23,527 - WARNING -  * Debugger is active!
+2026-03-21 18:57:23,533 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 18:58:41,138 - INFO - 127.0.0.1 - - [21/Mar/2026 18:58:41] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:58:41,395 - INFO - Incoming Request Query: percentage of discount used
+2026-03-21 18:58:41,763 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:58:41,782 - INFO - Semantic Layer applied. Enhanced query: percentage of discount used
+2026-03-21 18:58:41,799 - INFO - Raw SQL Generation Attempt for: percentage of discount used
+2026-03-21 18:58:41,799 - WARNING - VALIDATION: Potential unauthorized field detected: 'LOWER'
+2026-03-21 18:58:41,799 - WARNING - VALIDATION: Potential unauthorized field detected: 'TRIM'
+2026-03-21 18:58:41,799 - WARNING - VALIDATION: Potential unauthorized field detected: 'COALESCE'
+2026-03-21 18:58:41,799 - WARNING - VALIDATION: Potential unauthorized field detected: 'YES'
+2026-03-21 18:58:41,799 - WARNING - VALIDATION: Potential unauthorized field detected: 'NULLIF'
+2026-03-21 18:58:43,095 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:58:43,097 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 18:58:43,099 - INFO - 127.0.0.1 - - [21/Mar/2026 18:58:43] "POST /query HTTP/1.1" 200 -
+2026-03-21 18:58:50,575 - INFO - 127.0.0.1 - - [21/Mar/2026 18:58:50] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 18:58:50,883 - INFO - Incoming Request Query: sales by category
+2026-03-21 18:58:51,286 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:58:51,288 - INFO - Semantic Layer applied. Enhanced query: purchase_amount by category
+2026-03-21 18:58:51,592 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 18:58:51,602 - INFO - AI SQL Generation complete. Length: 109
+2026-03-21 18:58:51,606 - INFO - Raw SQL Generation Attempt for: purchase_amount by category
+2026-03-21 18:58:51,607 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 18:58:51,730 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 18:58:51,730 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 18:58:51,734 - INFO - 127.0.0.1 - - [21/Mar/2026 18:58:51] "POST /query HTTP/1.1" 200 -
+2026-03-21 19:00:07,871 - INFO - 127.0.0.1 - - [21/Mar/2026 19:00:07] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 19:00:08,125 - INFO - Incoming Request Query: total sales
+2026-03-21 19:00:08,494 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:00:08,494 - INFO - Semantic Layer applied. Enhanced query: total purchase_amount
+2026-03-21 19:00:08,705 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:00:08,707 - INFO - AI SQL Generation complete. Length: 60
+2026-03-21 19:00:08,707 - INFO - Raw SQL Generation Attempt for: total purchase_amount
+2026-03-21 19:00:08,711 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:00:08,880 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 19:00:08,884 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 19:00:08,884 - INFO - 127.0.0.1 - - [21/Mar/2026 19:00:08] "POST /query HTTP/1.1" 200 -
+2026-03-21 19:00:29,945 - INFO - 127.0.0.1 - - [21/Mar/2026 19:00:29] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 19:00:30,255 - INFO - Incoming Request Query: top 5 products by revenue
+2026-03-21 19:00:30,516 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:00:30,516 - INFO - Semantic Layer applied. Enhanced query: top 5 products by purchase_amount
+2026-03-21 19:00:30,827 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:00:30,828 - INFO - AI SQL Generation complete. Length: 159
+2026-03-21 19:00:30,830 - INFO - Raw SQL Generation Attempt for: top 5 products by purchase_amount
+2026-03-21 19:00:30,833 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:00:30,833 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_SALES'
+2026-03-21 19:00:30,833 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_SALES'
+2026-03-21 19:00:30,934 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 19:00:30,936 - INFO - Query executed successfully. Rows returned: 5
+2026-03-21 19:00:30,937 - INFO - 127.0.0.1 - - [21/Mar/2026 19:00:30] "POST /query HTTP/1.1" 200 -
+2026-03-21 19:01:00,652 - INFO - 127.0.0.1 - - [21/Mar/2026 19:01:00] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 19:01:00,955 - INFO - Incoming Request Query: sales by category
+2026-03-21 19:01:01,136 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:01:01,138 - INFO - Semantic Layer applied. Enhanced query: purchase_amount by category
+2026-03-21 19:01:01,155 - INFO - Raw SQL Generation Attempt for: purchase_amount by category
+2026-03-21 19:01:01,155 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:01:01,277 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 19:01:01,277 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 19:01:01,281 - INFO - 127.0.0.1 - - [21/Mar/2026 19:01:01] "POST /query HTTP/1.1" 200 -
+2026-03-21 19:03:47,827 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading
+2026-03-21 19:03:48,296 - INFO -  * Restarting with watchdog (windowsapi)
+2026-03-21 19:03:51,843 - WARNING -  * Debugger is active!
+2026-03-21 19:03:51,849 - INFO -  * Debugger PIN: 649-524-882
+2026-03-21 19:05:54,230 - INFO - 127.0.0.1 - - [21/Mar/2026 19:05:54] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 19:05:54,486 - INFO - Incoming Request Query: sales by category
+2026-03-21 19:05:54,834 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:05:54,852 - INFO - Semantic Layer applied. Enhanced query: purchase_amount by category
+2026-03-21 19:05:54,855 - INFO - Raw SQL Generation Attempt for: purchase_amount by category
+2026-03-21 19:05:54,856 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:05:56,880 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 19:05:56,883 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 19:05:56,888 - INFO - 127.0.0.1 - - [21/Mar/2026 19:05:56] "POST /query HTTP/1.1" 200 -
+2026-03-21 19:08:00,747 - INFO - 127.0.0.1 - - [21/Mar/2026 19:08:00] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 19:08:00,996 - INFO - Incoming Request Query: Total revenue
+2026-03-21 19:08:01,198 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:08:01,198 - INFO - Semantic Layer applied. Enhanced query: Total purchase_amount
+2026-03-21 19:08:01,405 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:08:01,413 - INFO - AI SQL Generation complete. Length: 60
+2026-03-21 19:08:01,413 - INFO - Raw SQL Generation Attempt for: Total purchase_amount
+2026-03-21 19:08:01,418 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:08:02,426 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 19:08:02,430 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 19:08:02,430 - INFO - 127.0.0.1 - - [21/Mar/2026 19:08:02] "POST /query HTTP/1.1" 200 -
+2026-03-21 19:08:19,117 - INFO - 127.0.0.1 - - [21/Mar/2026 19:08:19] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 19:08:19,427 - INFO - Incoming Request Query: Total sales
+2026-03-21 19:08:19,633 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:08:19,634 - INFO - Semantic Layer applied. Enhanced query: Total purchase_amount
+2026-03-21 19:08:19,650 - INFO - Raw SQL Generation Attempt for: Total purchase_amount
+2026-03-21 19:08:19,650 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:08:19,838 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 19:08:19,838 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 19:08:19,838 - INFO - 127.0.0.1 - - [21/Mar/2026 19:08:19] "POST /query HTTP/1.1" 200 -
+2026-03-21 19:08:31,853 - INFO - 127.0.0.1 - - [21/Mar/2026 19:08:31] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 19:08:32,158 - INFO - Incoming Request Query: Total spending
+2026-03-21 19:08:32,436 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:08:32,436 - INFO - Semantic Layer applied. Enhanced query: Total purchase_amount
+2026-03-21 19:08:32,438 - INFO - Raw SQL Generation Attempt for: Total purchase_amount
+2026-03-21 19:08:32,438 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:08:32,536 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 19:08:32,538 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 19:08:32,539 - INFO - 127.0.0.1 - - [21/Mar/2026 19:08:32] "POST /query HTTP/1.1" 200 -
+2026-03-21 19:08:44,258 - INFO - 127.0.0.1 - - [21/Mar/2026 19:08:44] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 19:08:44,567 - INFO - Incoming Request Query: Total revenue
+2026-03-21 19:08:44,815 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:08:44,817 - INFO - Semantic Layer applied. Enhanced query: Total purchase_amount
+2026-03-21 19:08:44,817 - INFO - Raw SQL Generation Attempt for: Total purchase_amount
+2026-03-21 19:08:44,817 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:08:44,911 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 19:08:44,912 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 19:08:44,914 - INFO - 127.0.0.1 - - [21/Mar/2026 19:08:44] "POST /query HTTP/1.1" 200 -
+2026-03-21 19:09:54,460 - INFO - 127.0.0.1 - - [21/Mar/2026 19:09:54] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 19:09:54,709 - INFO - Incoming Request Query: Compare sales across categories
+2026-03-21 19:09:54,870 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:09:54,872 - INFO - Semantic Layer applied. Enhanced query: Compare purchase_amount across categories
+2026-03-21 19:09:55,176 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:09:55,177 - INFO - AI SQL Generation complete. Length: 313
+2026-03-21 19:09:55,180 - INFO - Raw SQL Generation Attempt for: Compare purchase_amount across categories
+2026-03-21 19:09:55,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:09:55,180 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 19:09:55,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:09:55,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'AVERAGE_AMOUNT'
+2026-03-21 19:09:55,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:09:55,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'MAX_AMOUNT'
+2026-03-21 19:09:55,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:09:55,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'MIN_AMOUNT'
+2026-03-21 19:09:55,183 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 19:09:55,394 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 19:09:55,397 - INFO - Query executed successfully. Rows returned: 24
+2026-03-21 19:09:55,488 - INFO - 127.0.0.1 - - [21/Mar/2026 19:09:55] "POST /query HTTP/1.1" 200 -
+2026-03-21 19:43:57,577 - INFO - 127.0.0.1 - - [21/Mar/2026 19:43:57] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 19:43:57,828 - INFO - Incoming Request Query:  Show sales by city
+2026-03-21 19:44:01,034 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:44:01,035 - INFO - Semantic Layer applied. Enhanced query:  Show purchase_amount by location
+2026-03-21 19:44:01,389 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:44:01,397 - INFO - AI SQL Generation complete. Length: 91
+2026-03-21 19:44:01,400 - INFO - Raw SQL Generation Attempt for:  Show purchase_amount by location
+2026-03-21 19:44:01,400 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:44:05,949 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 19:44:05,960 - INFO - Query executed successfully. Rows returned: 969
+2026-03-21 19:44:05,972 - INFO - 127.0.0.1 - - [21/Mar/2026 19:44:05] "POST /query HTTP/1.1" 200 -
+2026-03-21 19:44:41,695 - INFO - 127.0.0.1 - - [21/Mar/2026 19:44:41] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 19:44:41,938 - INFO - Incoming Request Query:  Which purchase category has the highest sales?
+2026-03-21 19:44:42,109 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:44:42,112 - INFO - Semantic Layer applied. Enhanced query:  Which purchase category has the highest purchase_amount?
+2026-03-21 19:44:42,340 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:44:42,343 - INFO - AI SQL Generation complete. Length: 161
+2026-03-21 19:44:42,347 - INFO - Raw SQL Generation Attempt for:  Which purchase category has the highest purchase_amount?
+2026-03-21 19:44:42,349 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:44:42,349 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 19:44:42,349 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 19:44:42,696 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 19:44:42,698 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 19:44:42,699 - INFO - 127.0.0.1 - - [21/Mar/2026 19:44:42] "POST /query HTTP/1.1" 200 -
+2026-03-21 19:44:57,133 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=purchase_category%2Cpurchase_amount%2Ctime_of_purchase "HTTP/2 200 OK"
+2026-03-21 19:44:57,174 - INFO - 127.0.0.1 - - [21/Mar/2026 19:44:57] "GET /analytics/sales HTTP/1.1" 200 -
+2026-03-21 19:44:57,647 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=purchase_category%2Cpurchase_amount%2Ctime_of_purchase "HTTP/2 200 OK"
+2026-03-21 19:44:57,673 - INFO - 127.0.0.1 - - [21/Mar/2026 19:44:57] "GET /analytics/sales HTTP/1.1" 200 -
+2026-03-21 19:45:02,679 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=customer_id%2Clocation "HTTP/2 200 OK"
+2026-03-21 19:45:02,709 - INFO - 127.0.0.1 - - [21/Mar/2026 19:45:02] "GET /analytics/customers HTTP/1.1" 200 -
+2026-03-21 19:45:02,927 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=customer_id%2Clocation "HTTP/2 200 OK"
+2026-03-21 19:45:02,969 - INFO - 127.0.0.1 - - [21/Mar/2026 19:45:02] "GET /analytics/customers HTTP/1.1" 200 -
+2026-03-21 19:45:07,786 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=purchase_category%2Cpurchase_amount "HTTP/2 200 OK"
+2026-03-21 19:45:07,807 - INFO - 127.0.0.1 - - [21/Mar/2026 19:45:07] "GET /analytics/products HTTP/1.1" 200 -
+2026-03-21 19:45:08,297 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=purchase_category%2Cpurchase_amount "HTTP/2 200 OK"
+2026-03-21 19:45:08,328 - INFO - 127.0.0.1 - - [21/Mar/2026 19:45:08] "GET /analytics/products HTTP/1.1" 200 -
+2026-03-21 19:48:36,558 - INFO - 127.0.0.1 - - [21/Mar/2026 19:48:36] "POST /upload HTTP/1.1" 200 -
+2026-03-21 19:48:43,236 - INFO - 127.0.0.1 - - [21/Mar/2026 19:48:43] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 19:48:43,545 - INFO - Incoming Request Query:  Which purchase category has the highest sales?
+2026-03-21 19:48:43,757 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:48:43,758 - INFO - Semantic Layer applied. Enhanced query:  Which purchase category has the highest purchase_amount?
+2026-03-21 19:48:43,773 - INFO - Raw SQL Generation Attempt for:  Which purchase category has the highest purchase_amount?
+2026-03-21 19:48:43,773 - WARNING - VALIDATION: Potential unauthorized field detected: 'NUMERIC'
+2026-03-21 19:48:43,773 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 19:48:43,773 - WARNING - VALIDATION: Potential unauthorized field detected: 'TOTAL_AMOUNT'
+2026-03-21 19:48:44,372 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 19:48:44,373 - INFO - Query executed successfully. Rows returned: 1
+2026-03-21 19:48:44,373 - INFO - 127.0.0.1 - - [21/Mar/2026 19:48:44] "POST /query HTTP/1.1" 200 -
+2026-03-21 19:48:53,684 - INFO - 127.0.0.1 - - [21/Mar/2026 19:48:53] "[31m[1mPOST /upload HTTP/1.1[0m" 400 -
+2026-03-21 19:49:02,233 - INFO - 127.0.0.1 - - [21/Mar/2026 19:49:02] "POST /upload HTTP/1.1" 200 -
+2026-03-21 19:49:15,020 - INFO - 127.0.0.1 - - [21/Mar/2026 19:49:15] "OPTIONS /query HTTP/1.1" 200 -
+2026-03-21 19:49:15,323 - INFO - Incoming Request Query: show sales
+2026-03-21 19:49:15,449 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:49:15,453 - INFO - Semantic Layer applied. Enhanced query: show purchase_amount
+2026-03-21 19:49:15,601 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 19:49:15,605 - INFO - AI SQL Generation complete. Length: 46
+2026-03-21 19:49:15,608 - INFO - Raw SQL Generation Attempt for: show purchase_amount
+2026-03-21 19:49:15,738 - INFO - HTTP Request: POST https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/rpc/execute_sql "HTTP/2 200 OK"
+2026-03-21 19:49:15,755 - INFO - Query executed successfully. Rows returned: 1000
+2026-03-21 19:49:15,760 - INFO - 127.0.0.1 - - [21/Mar/2026 19:49:15] "[35m[1mPOST /query HTTP/1.1[0m" 500 -
+2026-03-21 21:05:09,733 - INFO -  * Detected change in 'C:\\Users\\sarth\\Desktop\\AI Business Insights Dashboard using Natural Language to SQL\\backend\\app.py', reloading

@@ -1,0 +1,245 @@
+{
+    "38bc281cb3a0831c015ef9842115b8bc": "SELECT \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP) AS year,\n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP) AS month,\n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP),\n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP)\nORDER BY \n    year, month;",
+    "267ba6bfe21bad18366d8b42c09676d8": "**Reasoning**\n\n1. **Table and columns** \u2013 The data lives in the `ecommerce_behavior` table.  \n2. **Date handling** \u2013 The column `time_of_purchase` is stored as text, so it must be cast to a timestamp before extracting month and year. This is done with `time_of_purchase::TIMESTAMP`.  \n3. **Filtering for January\u202f2024** \u2013 Use `EXTRACT(MONTH FROM \u2026) = 1` and `EXTRACT(YEAR FROM \u2026) = 2024` to keep only rows whose purchase date falls in that month and year.  \n4. **Select all columns** \u2013 The request is to \u201cshow all orders,\u201d so we return `*`.  \n5. **No aggregates are needed** for this simple filter, so numeric casting is not required here.\n\n**SQL query**\n\n\nSELECT *\nFROM ecommerce_behavior\nWHERE EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP) = 1\n  AND EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP) = 2024;",
+    "d2fda6e5c07cfbd58765e50315705711": "SELECT \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP) AS year,\n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP) AS month,\n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP),\n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP)\nORDER BY \n    year, month;",
+    "e2057c65eca4e88c201e5262bfe7e1e3": "SELECT customer_id\nFROM ecommerce_behavior\nGROUP BY customer_id\nHAVING COUNT(*) > 3;",
+    "844aa071337fdcb548234e47787af303": "SELECT customer_id\nFROM ecommerce_behavior\nGROUP BY customer_id\nHAVING COUNT(*) > 3;",
+    "ba7bf1257bda11e9d258dbf645df7fd8": "SELECT purchase_category, SUM(purchase_amount::NUMERIC) AS total_sales\nFROM ecommerce_behavior\nGROUP BY purchase_category\nORDER BY total_sales DESC;",
+    "b12a414c3d420777f8fc6de20c350f93": "**Reasoning**\n\n1. **Identify the required aggregation** \u2013 We need the total sales (sum of `purchase_amount`) for each month.\n2. **Handle data types** \u2013  \n   * `purchase_amount` is stored as text, so we cast it to `NUMERIC` before summing: `purchase_amount::NUMERIC`.  \n   * `time_of_purchase` is stored as text representing a timestamp, so we cast it to `TIMESTAMP` before extracting the month and year: `time_of_purchase::TIMESTAMP`.\n3. **Extract month and year** \u2013 Use `EXTRACT(MONTH FROM \u2026)` and `EXTRACT(YEAR FROM \u2026)` on the casted timestamp so the results are grouped by calendar month across years.\n4. **Aggregate** \u2013 `SUM(purchase_amount::NUMERIC)` gives the total sales for each month.\n5. **Group and order** \u2013 Group by both month and year, then order chronologically (year first, then month).\n\n**SQL query**\n\n\nSELECT \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP) AS year,\n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP) AS month,\n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP),\n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP)\nORDER BY \n    year,\n    month;",
+    "c993a9cd37b11f68b8734b24eeeb2792": "SELECT \n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior;",
+    "f977a8a8ba84ec04615fea58d0533521": "SELECT \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP) AS year,\n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP) AS month,\n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP),\n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP)\nORDER BY \n    year, month;",
+    "5ccf23e655a930755765b4d1041cf17e": "WITH ranked_products AS (\n  SELECT \n    purchase_category,\n    product_rating,\n    SUM(purchase_amount::NUMERIC) AS total_sales,\n    ROW_NUMBER() OVER (PARTITION BY purchase_category ORDER BY SUM(purchase_amount::NUMERIC) DESC) AS sales_rank\n  FROM \n    ecommerce_behavior\n  GROUP BY \n    purchase_category, product_rating\n)\nSELECT \n  purchase_category,\n  product_rating,\n  total_sales\nFROM \n  ranked_products\nWHERE \n  sales_rank <= 3\nORDER BY \n  purchase_category, total_sales DESC;",
+    "6e31dad4f8442cdce6a8704de7984724": "SELECT \n    location, \n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    location\nORDER BY \n    total_sales DESC;",
+    "47a62281abb04885f349ce9a28281b90": "SELECT \n    location,\n    SUM(purchase_amount::NUMERIC) AS total_purchase_amount\nFROM \n    ecommerce_behavior\nGROUP BY \n    location\nORDER BY \n    total_purchase_amount DESC\nLIMIT 5;",
+    "d71f4fbc5c716d5c684fe5402d466ee0": "SELECT \n    gender,\n    AVG(purchase_amount::NUMERIC) AS average_spend\nFROM \n    ecommerce_behavior\nGROUP BY \n    gender\nORDER BY \n    average_spend DESC;",
+    "fe3ea7e1eb37468eeb4a85c25e137ccc": "SELECT purchase_category, \n       SUM(purchase_amount::NUMERIC) AS total_sales\nFROM ecommerce_behavior\nGROUP BY purchase_category\nORDER BY total_sales DESC\nLIMIT 1;",
+    "fd5cdab418a788c3d56c86e16d193e95": "SELECT \n    purchase_channel,\n    COUNT(customer_id) AS total_customers,\n    SUM(purchase_amount::NUMERIC) AS total_purchase_amount,\n    AVG(purchase_amount::NUMERIC) AS average_purchase_amount,\n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP) AS purchase_month,\n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP) AS purchase_year\nFROM \n    ecommerce_behavior\nGROUP BY \n    purchase_channel, \n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP), \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP)\nORDER BY \n    purchase_channel;",
+    "520b8bf76a1f8ce509160e5216fb57e6": "SELECT \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP) AS year,\n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP) AS month,\n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP),\n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP)\nORDER BY \n    year, month;",
+    "308687dd7d61ce7a58212389ef7308dc": "SELECT \n    location, \n    COUNT(customer_id) AS total_customers\nFROM \n    ecommerce_behavior\nGROUP BY \n    location\nORDER BY \n    total_customers DESC;",
+    "fc2d59a572ff3b517e30041fd8cdeb61": "SELECT COUNT(*) FROM ecommerce_behavior;",
+    "b9fa841ddb58e580426b6e5185cad8d0": "SELECT \n    customer_id,\n    age,\n    gender,\n    income_level,\n    marital_status,\n    education_level,\n    occupation,\n    location,\n    purchase_category,\n    purchase_amount::NUMERIC,\n    frequency_of_purchase,\n    purchase_channel,\n    brand_loyalty,\n    product_rating,\n    time_spent_on_product_researchhours,\n    social_media_influence,\n    discount_sensitivity,\n    return_rate,\n    customer_satisfaction,\n    engagement_with_ads,\n    device_used_for_shopping,\n    payment_method,\n    time_of_purchase::TIMESTAMP,\n    discount_used,\n    customer_loyalty_program_member,\n    purchase_intent,\n    shipping_preference,\n    time_to_decision\nFROM \n    ecommerce_behavior\nLIMIT 10;",
+    "7efd258706040076472f983eada0c9f6": "SELECT \n    location, \n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    location\nORDER BY \n    total_sales DESC;",
+    "09166b1243db5d2d2c23ef33455a2b35": "SELECT \n    location, \n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    location\nORDER BY \n    total_sales DESC;",
+    "a765eb719caa9c9b4f53d3c7336576b3": "SELECT \n    purchase_category,\n    SUM(purchase_amount::NUMERIC) AS total_purchase_amount\nFROM \n    ecommerce_behavior\nGROUP BY \n    purchase_category\nORDER BY \n    total_purchase_amount DESC;",
+    "1660b8832dd05c1105081ca797f8407b": "SELECT \n    device_used_for_shopping,\n    COUNT(customer_id) AS total_purchases\nFROM \n    ecommerce_behavior\nGROUP BY \n    device_used_for_shopping\nORDER BY \n    total_purchases DESC;",
+    "2044cfbd2725473a697668e692bc4972": "SELECT \n    payment_method, \n    COUNT(*) AS usage_count\nFROM \n    ecommerce_behavior\nGROUP BY \n    payment_method\nORDER BY \n    usage_count DESC;",
+    "ea6095f343737cb9c70dedba03a80e6a": "SELECT 'age' AS factor, corr(purchase_amount::NUMERIC, age::NUMERIC) AS correlation\nFROM ecommerce_behavior\nUNION ALL\nSELECT 'income_level', corr(purchase_amount::NUMERIC, income_level)\nFROM ecommerce_behavior\nUNION ALL\nSELECT 'frequency_of_purchase', corr(purchase_amount::NUMERIC, frequency_of_purchase)\nFROM ecommerce_behavior\nUNION ALL\nSELECT 'brand_loyalty', corr(purchase_amount::NUMERIC, brand_loyalty)\nFROM ecommerce_behavior\nUNION ALL\nSELECT 'product_rating', corr(purchase_amount::NUMERIC, product_rating::NUMERIC)\nFROM ecommerce_behavior\nUNION ALL\nSELECT 'time_spent_on_product_researchhours', corr(purchase_amount::NUMERIC, time_spent_on_product_researchhours::NUMERIC)\nFROM ecommerce_behavior\nUNION ALL\nSELECT 'social_media_influence', corr(purchase_amount::NUMERIC, social_media_influence)\nFROM ecommerce_behavior\nUNION ALL\nSELECT 'discount_sensitivity', corr(purchase_amount::NUMERIC, discount_sensitivity)\nFROM ecommerce_behavior\nUNION ALL\nSELECT 'return_rate', corr(purchase_amount::NUMERIC, return_rate::NUMERIC)\nFROM ecommerce_behavior\nUNION ALL\nSELECT 'customer_satisfaction', corr(purchase_amount::NUMERIC, customer_satisfaction::NUMERIC)\nFROM ecommerce_behavior\nUNION ALL\nSELECT 'engagement_with_ads', corr(purchase_amount::NUMERIC, engagement_with_ads)\nFROM ecommerce_behavior\nUNION ALL\nSELECT 'time_to_decision', corr(purchase_amount::NUMERIC, time_to_decision::NUMERIC)\nFROM ecommerce_behavior\nORDER BY ABS(correlation) DESC;",
+    "93bc8123fa0651df5c4bcb7d413859e1": "SELECT \n    education_level,\n    AVG(purchase_amount::NUMERIC) AS average_purchase_amount\nFROM \n    ecommerce_behavior\nGROUP BY \n    education_level;",
+    "4b76dd1bb4bd54f42a564f6ba465f12d": "SELECT \n    location, \n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    location\nORDER BY \n    total_sales DESC;",
+    "3a43d00c4269668522e8058ea7a86fd3": "SELECT \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP) AS purchase_year,\n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP) AS purchase_month,\n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    purchase_year, purchase_month\nORDER BY \n    purchase_year, purchase_month;",
+    "932bbdb5eb4f592fa8b5ea3d549aa0c3": "SELECT \n    gender,\n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    gender\nORDER BY \n    total_sales DESC;",
+    "42b5a6a36e9b992550b69e9d8a932ac9": "SELECT \n    age,\n    COUNT(*) AS count\nFROM \n    ecommerce_behavior\nGROUP BY \n    age\nORDER BY \n    count DESC;",
+    "cb63d98dea9f3311dcf28ec8bffd8d5d": "SELECT \n    purchase_category,\n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    purchase_category\nORDER BY \n    total_sales DESC;",
+    "810cb870e86f5dd2561907a0d10b3881": "SELECT\n    gender,\n    age,\n    COUNT(DISTINCT customer_id) AS customer_count,\n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM\n    ecommerce_behavior\nGROUP BY\n    gender,\n    age\nORDER BY\n    gender,\n    age;",
+    "51ca7470547b57c556f785246be786fd": "SELECT \n    location, \n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    location\nORDER BY \n    total_sales DESC;",
+    "2f4266ba44cef71c965960b33f4b57b9": "SELECT \n    purchase_category,\n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    purchase_category\nORDER BY \n    total_sales DESC;",
+    "014c84a00dc1ca52ee0206a003201886": "SELECT \n    purchase_category, \n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    purchase_category\nORDER BY \n    total_sales DESC;",
+    "76001d5acf61ab44e0bf483cdead136d": "SELECT customer_id, \n       SUM(purchase_amount::NUMERIC) AS total_purchase_amount\nFROM ecommerce_behavior\nGROUP BY customer_id\nORDER BY total_purchase_amount DESC;",
+    "f579edc7a2e3e615ee4d57b09d357e05": "SELECT \n    customer_id,\n    frequency_of_purchase\nFROM \n    ecommerce_behavior\nORDER BY \n    frequency_of_purchase DESC;",
+    "3ae4f98e7decea7077ece4e77c7aceeb": "SELECT \n    customer_id, \n    SUM(purchase_amount::NUMERIC) AS total_purchase_amount\nFROM \n    ecommerce_behavior\nWHERE \n    time_of_purchase::TIMESTAMP > NOW() - INTERVAL '30 days'\nGROUP BY \n    customer_id\nORDER BY \n    total_purchase_amount DESC;",
+    "2e81642869905ec5775633ac0603fbe4": "SELECT\n    customer_id,\n    SUM(purchase_amount::NUMERIC) AS total_purchase_amount\nFROM\n    ecommerce_behavior\nGROUP BY\n    customer_id\nORDER BY\n    total_purchase_amount DESC\nLIMIT 10;",
+    "e05f6b64918bd5bdb4ef2d5c8af08c46": "SELECT \n    purchase_channel, \n    COUNT(customer_id) AS frequency\nFROM \n    ecommerce_behavior\nGROUP BY \n    purchase_channel\nORDER BY \n    frequency DESC;",
+    "1155dfbd407a8c6b08cf70773d27e2e9": "SELECT \n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nWHERE \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP) = 3000;",
+    "d23b85eef58e695389f94a575f65f403": "SELECT \n    purchase_category, \n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nWHERE \n    purchase_category = 'XYZ'\nGROUP BY \n    purchase_category;",
+    "6914064fa6149b67baf2065832b1c4b1": "SELECT\n    frequency_of_purchase,\n    COUNT(*) AS purchase_count\nFROM\n    ecommerce_behavior\nGROUP BY\n    frequency_of_purchase\nORDER BY\n    purchase_count DESC;",
+    "d9f27a62c7fbc4fd546f70f8c10a5402": "SELECT \n    customer_id, \n    frequency_of_purchase\nFROM \n    ecommerce_behavior\nWHERE \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP) = 2026\nORDER BY \n    frequency_of_purchase DESC;",
+    "e3882ebeb705ad613c30946ad9ff172b": "SELECT \n    income_level,\n    SUM(purchase_amount::NUMERIC) AS total_spent\nFROM \n    ecommerce_behavior\nGROUP BY \n    income_level\nORDER BY \n    total_spent DESC\nLIMIT 1;",
+    "4d9823f8416ffbb34ba7b2983f2c2e94": "SELECT *\nFROM ecommerce_behavior\nWHERE purchase_category = 'Electronics';",
+    "7e1b5e68c49ad8401e9706da128b2a85": "**Reasoning**\n\n- The task is to list customers who made purchases using smartphones.\n- The relevant column for the device used in shopping is `device_used_for_shopping`.\n- We need to filter rows where this column equals the string `'smartphone'`.\n- Since the request is only to list customers (no aggregates or date handling), we do not need to cast any numeric or date columns.\n- To avoid duplicate customer IDs (a customer may have multiple smartphone purchases), we use `DISTINCT`.\n\n**SQL Query**\n\n\nSELECT DISTINCT customer_id\nFROM ecommerce_behavior\nWHERE device_used_for_shopping = 'smartphone';",
+    "6603b85ba2ad16a1d14b72900ffbd504": "SELECT \n    purchase_category, \n    COUNT(customer_id) AS purchase_count\nFROM \n    ecommerce_behavior\nWHERE \n    income_level = 'high'\nGROUP BY \n    purchase_category\nORDER BY \n    purchase_count DESC\nLIMIT 1;",
+    "7627abf36496ea0d2c3f2125fed855df": "SELECT \n    discount_sensitivity,\n    AVG(purchase_amount::NUMERIC) AS average_purchase_amount\nFROM \n    ecommerce_behavior\nGROUP BY \n    discount_sensitivity\nORDER BY \n    average_purchase_amount DESC;",
+    "0618425f66d75884ddfe2db9d357f8d9": "SELECT \n    customer_id,\n    social_media_influence,\n    engagement_with_ads\nFROM \n    ecommerce_behavior\nWHERE \n    social_media_influence > 0\n    AND engagement_with_ads > 0;",
+    "c8db1dbdc2a391fabc87a50deb2add2e": "SELECT\n    customer_id,\n    AVG(purchase_amount::NUMERIC) FILTER (WHERE discount_used) AS avg_amount_with_discount,\n    COUNT(*) FILTER (WHERE discount_used)::NUMERIC / COUNT(*) AS discount_response_rate,\n    AVG(discount_sensitivity) AS avg_discount_sensitivity\nFROM ecommerce_behavior\nGROUP BY customer_id\nORDER BY discount_response_rate DESC, avg_discount_sensitivity DESC;",
+    "a201fe65326ce22c1b93f8aded3462fc": "SELECT\n    customer_id,\n    age,\n    gender,\n    income_level,\n    marital_status,\n    education_level,\n    occupation,\n    location,\n    purchase_category,\n    purchase_amount::NUMERIC,\n    frequency_of_purchase,\n    purchase_channel,\n    brand_loyalty,\n    product_rating,\n    time_spent_on_product_researchhours,\n    social_media_influence,\n    discount_sensitivity,\n    return_rate,\n    customer_satisfaction,\n    engagement_with_ads,\n    device_used_for_shopping,\n    payment_method,\n    time_of_purchase::TIMESTAMP,\n    discount_used,\n    customer_loyalty_program_member,\n    shipping_preference,\n    time_to_decision,\n    purchase_intent\nFROM ecommerce_behavior;",
+    "4ec316d9428b894ab67ccb62a3f4a8f6": "SELECT \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP) AS year,\n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP) AS month,\n    SUM(purchase_amount::NUMERIC) AS total_sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    EXTRACT(YEAR FROM time_of_purchase::TIMESTAMP),\n    EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP)\nORDER BY \n    year, month;",
+    "f37e7bbc42d13478509654d2dca85182": "SELECT purchase_category, COUNT(*) AS purchase_count\nFROM ecommerce_behavior\nGROUP BY purchase_category\nORDER BY purchase_count DESC\nLIMIT 5;",
+    "22251bb7bd2dee57e3a013fe0bb8ad2a": "SELECT AVG(purchase_amount::NUMERIC) AS average_purchase_amount\nFROM ecommerce_behavior;",
+    "a8e1cbbfb5f96c3a214dd8c0ce8c2b57": "SELECT \n    income_level, \n    COUNT(customer_id) AS number_of_customers\nFROM \n    ecommerce_behavior\nGROUP BY \n    income_level\nORDER BY \n    income_level;",
+    "d6c360d7a470b1c75e8db85e8edf3b56": "SELECT purchase_category, COUNT(*) AS count\nFROM ecommerce_behavior\nGROUP BY purchase_category\nORDER BY count DESC\nLIMIT 1;",
+    "489dbdfa9b567667da2a4488478254af": "SELECT \n    (SUM(CASE WHEN discount_used THEN 1 ELSE 0 END)::NUMERIC / COUNT(customer_id)::NUMERIC) * 100 AS percentage_of_customers_using_discounts\nFROM ecommerce_behavior;",
+    "e2cf4216702c7f63b48f86fa137a7d62": "SELECT \n    payment_method, \n    COUNT(customer_id) AS number_of_users\nFROM \n    ecommerce_behavior\nGROUP BY \n    payment_method;",
+    "b0cc1a4aa993674f7f6ca5e8e8a8505a": "**Reasoning**\n\n1. **Goal** \u2013 Compute the average *time to decision* for each age group.  \n2. **Table & columns** \u2013 The data resides in `ecommerce_behavior`. The column we need to average is `time_to_decision`.  \n3. **Casting** \u2013 The prompt says that numeric\u2011text columns should be cast to `NUMERIC` when used in aggregates. Even if `time_to_decision` is already numeric, we follow the instruction and cast it explicitly: `time_to_decision::NUMERIC`.  \n4. **Grouping** \u2013 We group by the `age` column, which represents the age group of each customer.  \n5. **Ordering** \u2013 Adding an `ORDER BY age` makes the result easier to read, though it isn\u2019t strictly required.  \n\n**SQL Query**\n\n\nSELECT \n    age,\n    AVG(time_to_decision::NUMERIC) AS avg_time_to_decision\nFROM \n    ecommerce_behavior\nGROUP BY \n    age\nORDER BY \n    age;\n\n\n- `AVG(time_to_decision::NUMERIC)` computes the mean decision time for each age.  \n- `GROUP BY age` produces one row per age group.  \n- `ORDER BY age` returns the rows in ascending age order.",
+    "bb89cef01f910e4c3c78af05666a1f72": "SELECT \n    customer_id, \n    purchase_amount::NUMERIC, \n    customer_satisfaction\nFROM \n    ecommerce_behavior\nWHERE \n    purchase_amount::NUMERIC > (\n        SELECT AVG(purchase_amount::NUMERIC) \n        FROM ecommerce_behavior\n    )\n    AND customer_satisfaction < (\n        SELECT AVG(customer_satisfaction::NUMERIC) \n        FROM ecommerce_behavior\n    );",
+    "400d838d631876e9bc8bc3d276329c76": "SELECT \n    purchase_category AS segment,\n    AVG(return_rate::NUMERIC)::NUMERIC AS avg_return_rate\nFROM \n    ecommerce_behavior\nGROUP BY \n    purchase_category\nORDER BY \n    avg_return_rate DESC\nLIMIT 1;",
+    "75e6d2fd8c24071be612bcd909eb4b6e": "WITH thresholds AS (\n    SELECT\n        PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY brand_loyalty) AS brand_loyalty_25,\n        PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY customer_satisfaction) AS satisfaction_25\n    FROM ecommerce_behavior\n)\nSELECT\n    eb.customer_id,\n    eb.brand_loyalty,\n    eb.customer_satisfaction\nFROM ecommerce_behavior eb\nCROSS JOIN thresholds t\nWHERE eb.brand_loyalty < t.brand_loyalty_25\n  AND eb.customer_satisfaction < t.satisfaction_25;",
+    "eac96f3f633c3f03510aadafb4fa949c": "SELECT *\nFROM ecommerce_behavior\nWHERE CAST(purchase_amount AS NUMERIC) > 500;",
+    "95808ed17cc312f3eba712053204fc67": "SELECT *\nFROM ecommerce_behavior\nWHERE CAST(purchase_amount AS NUMERIC) > 100;",
+    "37d6ffe231ce8255fe1a06f3fbe68794": "SELECT AVG(purchase_amount::NUMERIC) AS average_purchase_amount\nFROM ecommerce_behavior;",
+    "1ce7782090496914eb3107e22addc7ba": "SELECT AVG(Purchase_Amount::NUMERIC)\nFROM ecommerce_behavior\nWHERE Purchase_Amount IS NOT NULL;",
+    "0c7d9184e8377c86ef6ae0a5ed12c929": "SELECT \n    Gender, \n    AVG(Purchase_Amount::NUMERIC) AS Average_Purchase_Amount\nFROM \n    ecommerce_behavior\nWHERE \n    Purchase_Amount IS NOT NULL\nGROUP BY \n    Gender\nORDER BY \n    Average_Purchase_Amount DESC\nLIMIT 100;",
+    "7dcbdea4c721000649f619472f24aa32": "SELECT \n    AVG(CASE WHEN Discount_Used = 'Yes' THEN 1 ELSE 0 END) * 100 AS percentage_discount_used\nFROM \n    ecommerce_behavior;",
+    "2e279041d86877e154e77c943d672180": "SELECT Customer_ID\nFROM ecommerce_behavior\nWHERE Discount_Used = 'Yes'\nLIMIT 100;",
+    "7741476a0664b2886ceb2c557ebd72c6": "SELECT AVG(Purchase_Amount::NUMERIC) \nFROM ecommerce_behavior \nWHERE Purchase_Amount IS NOT NULL;",
+    "3a413fe8ba515ccfd15bec95c8855229": "SELECT Device_Used_for_Shopping, COUNT(Customer_ID) AS count\nFROM ecommerce_behavior\nWHERE Device_Used_for_Shopping IS NOT NULL\nGROUP BY Device_Used_for_Shopping\nORDER BY count DESC\nLIMIT 1;",
+    "955f1632f4230e024990da98b2325e70": "SELECT \n    Age,\n    Gender,\n    Income_Level,\n    Marital_Status,\n    Education_Level,\n    Occupation,\n    Location,\n    Purchase_Intent,\n    COUNT(*) AS intent_count\nFROM ecommerce_behavior\nWHERE Age IS NOT NULL\n  AND Gender IS NOT NULL\n  AND Income_Level IS NOT NULL\n  AND Marital_Status IS NOT NULL\n  AND Education_Level IS NOT NULL\n  AND Occupation IS NOT NULL\n  AND Location IS NOT NULL\n  AND Purchase_Intent IS NOT NULL\nGROUP BY \n    Age,\n    Gender,\n    Income_Level,\n    Marital_Status,\n    Education_Level,\n    Occupation,\n    Location,\n    Purchase_Intent\nORDER BY intent_count DESC\nLIMIT 100;",
+    "511dcded2b9db05f9d3d9e1e6d76c62f": "SELECT AVG(Purchase_Amount::NUMERIC) \nFROM ecommerce_behavior;",
+    "ea35db59c9ff244307cbd13bdc93b6c5": "SELECT MAX(Purchase_Amount::NUMERIC) \nFROM ecommerce_behavior;",
+    "fac4f681dd0a4eb79196c830e344eecb": "SELECT \n    Payment_Method, \n    COUNT(Customer_ID) \nFROM \n    ecommerce_behavior \nWHERE \n    Payment_Method IS NOT NULL \nGROUP BY \n    Payment_Method \nORDER BY \n    COUNT(Customer_ID) DESC \nLIMIT 100;",
+    "362da4cc0f88aaeabb18f83a3c5d58ca": "SELECT \n    Gender,\n    AVG(Purchase_Amount::NUMERIC) AS Average_Purchase_Amount\nFROM \n    ecommerce_behavior\nWHERE \n    Purchase_Amount IS NOT NULL\nGROUP BY \n    Gender\nORDER BY \n    Average_Purchase_Amount DESC\nLIMIT 100;",
+    "dd0c5c82c9a5314661dfc2af809b3175": "SELECT Purchase_Category, SUM(Purchase_Amount::NUMERIC) AS Total_Revenue\nFROM ecommerce_behavior\nWHERE Purchase_Amount IS NOT NULL\nGROUP BY Purchase_Category\nORDER BY Total_Revenue DESC\nLIMIT 1;",
+    "747439e2ca59d3432071fe836684099d": "SELECT \n    Purchase_Category,\n    AVG(Product_Rating::NUMERIC) AS Average_Rating\nFROM \n    ecommerce_behavior\nWHERE \n    Product_Rating IS NOT NULL\nGROUP BY \n    Purchase_Category\nORDER BY \n    Average_Rating DESC\nLIMIT 100;",
+    "0f6d176caab7ae69e601c333c4911a7f": "SELECT \n  AVG(CASE WHEN Discount_Used = 'Yes' THEN 1 ELSE 0 END) * 100 AS percentage_discount_used\nFROM \n  ecommerce_behavior;",
+    "70d57867b7dbf9af6bc4029fd4d1d017": "SELECT \n    Customer_ID,\n    Customer_Loyalty_Program_Member,\n    Customer_Satisfaction\nFROM \n    ecommerce_behavior\nWHERE \n    Customer_Satisfaction::INT::NUMERIC < 5\n    AND Customer_Loyalty_Program_Member = 'No'\nLIMIT 100;",
+    "3793cb41cecad895f2ecdce21339fb02": "SELECT \n    Time_of_Purchase,\n    COUNT(Customer_ID) AS Number_of_Purchases,\n    AVG(Purchase_Amount::NUMERIC) AS Average_Purchase_Amount,\n    SUM(CASE WHEN Discount_Used = 'Yes' THEN 1 ELSE 0 END) AS Number_of_Discounts,\n    AVG(CASE WHEN Discount_Used = 'Yes' THEN 1 ELSE 0 END) * 100 AS Discount_Percentage\nFROM \n    ecommerce_behavior\nWHERE \n    Time_of_Purchase IS NOT NULL\nGROUP BY \n    Time_of_Purchase\nORDER BY \n    Time_of_Purchase\nLIMIT 100;",
+    "d907c31c34a1d8dfd1294e67ab6fa603": "SELECT Customer_ID, SUM(Purchase_Amount::NUMERIC) AS Total_Spent\nFROM ecommerce_behavior\nWHERE Purchase_Amount IS NOT NULL\nGROUP BY Customer_ID\nORDER BY Total_Spent DESC\nLIMIT 5;",
+    "4d3f0dd868e450393d46e9b99c31d4f4": "SELECT\n    Purchase_Category,\n    SUM(Purchase_Amount::NUMERIC) AS total_revenue,\n    SUM(Purchase_Amount * (1 - COALESCE(Return_Rate, 0))) AS net_revenue,\n    (SUM(Purchase_Amount * (1 - COALESCE(Return_Rate, 0))) / NULLIF(SUM(Purchase_Amount::NUMERIC), 0)) * 100 AS profit_margin_percent\nFROM\n    ecommerce_behavior\nWHERE\n    Purchase_Amount::FLOAT IS NOT NULL\nGROUP BY\n    Purchase_Category\nORDER BY\n    profit_margin_percent DESC\nLIMIT 100;",
+    "841b56e6b6347c7247fcc8fef167897e": "SELECT (COUNT(CASE WHEN Discount_Used = 'Yes' THEN 1 END) * 100.0 / COUNT(*)) AS percentage_discount_used \nFROM ecommerce_behavior;",
+    "009340ca3c57dc7909965ded4b3d077d": "WITH category_counts AS (\n    SELECT\n        Customer_ID,\n        Purchase_Category,\n        COUNT(*) AS cnt\n    FROM ecommerce_behavior\n    WHERE Purchase_Category IS NOT NULL\n    GROUP BY Customer_ID, Purchase_Category\n),\nmax_counts AS (\n    SELECT\n        Customer_ID,\n        MAX(cnt) AS max_cnt\n    FROM category_counts\n    GROUP BY Customer_ID\n)\nSELECT\n    cc.Customer_ID,\n    cc.Purchase_Category AS Predicted_Next_Category\nFROM category_counts cc\nJOIN max_counts mc\n    ON cc.Customer_ID = mc.Customer_ID\n   AND cc.cnt = mc.max_cnt\nLIMIT 100;",
+    "44947236f8a6af77f21cfe26bb2d0a09": "SELECT Device_Used_for_Shopping, COUNT(*) AS count\nFROM ecommerce_behavior\nWHERE Device_Used_for_Shopping IS NOT NULL\nGROUP BY Device_Used_for_Shopping\nORDER BY count DESC\nLIMIT 1;",
+    "18541a595775b6242357f1b32e9c6c8b": "SELECT Device_Used_for_Shopping, COUNT(*) AS count\nFROM ecommerce_behavior\nGROUP BY Device_Used_for_Shopping\nORDER BY count DESC\nLIMIT 1;\n\nSELECT Purchase_Category, SUM(Purchase_Amount::NUMERIC) AS total_sales\nFROM ecommerce_behavior\nGROUP BY Purchase_Category\nORDER BY total_sales DESC\nLIMIT 100;",
+    "98cffebab424df2c5a1c50b7d45b5a2a": "SELECT \n  Purchase_Category, \n  SUM(Purchase_Amount::NUMERIC) AS Total_Sales\nFROM \n  ecommerce_behavior\nWHERE \n  Purchase_Amount IS NOT NULL\nGROUP BY \n  Purchase_Category\nORDER BY \n  Total_Sales DESC\nLIMIT 100;",
+    "5100dc9c1fa20d472ac2dd6d4b37626f": "SELECT Purchase_Channel, COUNT(*) AS count\nFROM ecommerce_behavior\nGROUP BY Purchase_Channel\nORDER BY count DESC\nLIMIT 1;",
+    "176333954f487664e0eccc568369f1bd": "SELECT AVG(Purchase_Amount::NUMERIC) AS average_purchase_amount\nFROM ecommerce_behavior;",
+    "8755c7305eb1bfd367550d5031752766": "SELECT \n    Purchase_Category, \n    SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount\nFROM \n    ecommerce_behavior\nWHERE \n    Purchase_Amount IS NOT NULL\nGROUP BY \n    Purchase_Category\nORDER BY \n    Total_Purchase_Amount DESC\nLIMIT 100;",
+    "3c27c5ee6e6652d0bc382e23182e4ce4": "SELECT \n    Purchase_Category, \n    AVG(Purchase_Amount::NUMERIC) AS Average_Purchase_Amount\nFROM \n    ecommerce_behavior\nWHERE \n    Purchase_Amount IS NOT NULL\nGROUP BY \n    Purchase_Category\nORDER BY \n    Average_Purchase_Amount DESC\nLIMIT 100;",
+    "9b8d2f8a4489bedd0384ea4e0941d15c": "SELECT Purchase_Category, SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount\nFROM ecommerce_behavior\nWHERE Purchase_Amount IS NOT NULL\nGROUP BY Purchase_Category\nORDER BY Total_Purchase_Amount DESC\nLIMIT 100;",
+    "9b91b65ee319dad7d249d14b402343cc": "SELECT\n    Age,\n    Purchase_Category,\n    SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount\nFROM ecommerce_behavior\nWHERE Age IS NOT NULL\n  AND Purchase_Category IS NOT NULL\n  AND Purchase_Amount IS NOT NULL\nGROUP BY Age, Purchase_Category\nORDER BY Total_Purchase_Amount DESC\nLIMIT 1;",
+    "7c46d395e65ae1341f4305d7e880b2b4": "SELECT SUM(Purchase_Amount::NUMERIC)\nFROM ecommerce_behavior;",
+    "18d70b4590de0e15de267a3cf954c940": "SELECT Purchase_Category\nFROM ecommerce_behavior\nWHERE Purchase_Amount ::FLOAT::NUMERIC < 0\nLIMIT 100;",
+    "99a2a4a31517b3e91c9312879b5ba2a2": "SELECT AVG(Purchase_Amount::NUMERIC) AS average_purchase_amount FROM ecommerce_behavior;",
+    "a76cb692ccbf59608dee3dfda29faf7d": "SELECT (COUNT(CASE WHEN Discount_Used = 'Yes' THEN 1 END) * 100.0 / COUNT(*)) AS percentage_discount_used\nFROM ecommerce_behavior;",
+    "81ec5b1257b978de797c1f1893b24b46": "SELECT SUM(Purchase_Amount::NUMERIC)\nFROM ecommerce_behavior\nWHERE Discount_Used = 'Yes';",
+    "34e55cafa67661d026c61d0d9f139372": "SELECT Purchase_Category, AVG(Purchase_Amount::NUMERIC) AS avg_purchase_amount\nFROM ecommerce_behavior\nWHERE Purchase_Amount IS NOT NULL\nGROUP BY Purchase_Category\nORDER BY avg_purchase_amount DESC\nLIMIT 1;",
+    "7003afee39e42565e78f6e970f7ffcd6": "SELECT SUM(Purchase_Amount::NUMERIC) FROM ecommerce_behavior;",
+    "f863912e4e821bb95b086a2b823bee1e": "SELECT \n    Purchase_Category,\n    AVG(Purchase_Amount::NUMERIC) AS average_purchase_amount\nFROM \n    ecommerce_behavior\nWHERE \n    Purchase_Amount IS NOT NULL\nGROUP BY \n    Purchase_Category\nORDER BY \n    average_purchase_amount DESC\nLIMIT 100;",
+    "f5337caaf948ab231874d5776c2cbec4": "SELECT \n    Customer_ID,\n    Age,\n    Gender,\n    Income_Level,\n    Marital_Status,\n    Education_Level,\n    Occupation,\n    Location,\n    Purchase_Category,\n    Purchase_Amount,\n    Frequency_of_Purchase,\n    Purchase_Channel,\n    Brand_Loyalty,\n    Product_Rating,\n    Time_Spent_on_Product_Researchhours,\n    Social_Media_Influence,\n    Discount_Sensitivity,\n    Return_Rate,\n    Customer_Satisfaction,\n    Engagement_with_Ads,\n    Device_Used_for_Shopping,\n    Payment_Method,\n    Time_of_Purchase,\n    Discount_Used,\n    Customer_Loyalty_Program_Member,\n    Purchase_Intent,\n    Shipping_Preference,\n    Time_to_Decision\nFROM ecommerce_behavior\nWHERE Age::INT::NUMERIC > 200\nLIMIT 100;",
+    "1cbed0694fa06c80cf04e4130728093e": "SELECT Customer_ID, Purchase_Amount\nFROM ecommerce_behavior\nWHERE Purchase_Amount::NUMERIC > 10000::FLOAT\nLIMIT 100;",
+    "53020a4d2ffc990c8f62c549a2ae86d4": "SELECT Customer_ID, Age, Gender, Purchase_Amount\nFROM ecommerce_behavior\nLIMIT 100;",
+    "4554a22f3284eadd38a4d13b086b6211": "SELECT (COUNT(CASE WHEN Discount_Used = 'Yes' THEN 1 END) * 100.0 / COUNT(*)) AS percentage_discount_used \nFROM ecommerce_behavior;",
+    "7371df5b0d6f33da27fa4e00178fe3e4": "SELECT (COUNT(CASE WHEN Discount_Used = 'Yes' THEN 1 END) * 100.0 / COUNT(*)) AS percentage\nFROM ecommerce_behavior;",
+    "bd1753063d5e53445273969ce27daed6": "SELECT Purchase_Category, SUM(Purchase_Amount::NUMERIC) AS Total_Revenue\nFROM ecommerce_behavior\nGROUP BY Purchase_Category\nORDER BY Total_Revenue DESC\nLIMIT 1;",
+    "0d47cbb3cd6ff8cbc93183597d0f3f57": "SELECT Purchase_Category, AVG(Purchase_Amount::NUMERIC) AS average_purchase\nFROM ecommerce_behavior\nGROUP BY Purchase_Category\nORDER BY average_purchase DESC\nLIMIT 1;",
+    "c21adacb7f96a2867fe26ff29c6fae0d": "SELECT \n    SUM(CASE \n            WHEN LOWER(TRIM(COALESCE(discount_used, ''))) = 'yes' \n            THEN purchase_amount \n            ELSE 0 \n        END) AS total_purchase_amount_with_discount\nFROM \n    ecommerce_behavior;",
+    "da707f945f900607d0059ce48f6c8c11": "SELECT \n    LOWER(TRIM(COALESCE(Purchase_Category, ''))) AS Purchase_Category,\n    SUM(Purchase_Amount::NUMERIC) AS Total_Amount\nFROM \n    ecommerce_behavior\nGROUP BY \n    LOWER(TRIM(COALESCE(Purchase_Category, '')))\nORDER BY \n    Total_Amount DESC\nLIMIT 100;",
+    "990ebd03e3af531c054980a88fb177e4": "SELECT \n  LOWER(TRIM(COALESCE(purchase_category, ''))) AS purchase_category,\n  SUM(purchase_amount::NUMERIC) AS total_purchase_amount\nFROM \n  ecommerce_behavior\nGROUP BY \n  LOWER(TRIM(COALESCE(purchase_category, '')))\nLIMIT 100;",
+    "fe96b01d4bc06a52f4f9fa1625008d8d": "SELECT \n  LOWER(TRIM(COALESCE(Location, ''))) AS location,\n  SUM(Purchase_Amount::NUMERIC) AS total_purchase_amount\nFROM \n  ecommerce_behavior\nGROUP BY \n  LOWER(TRIM(COALESCE(Location, '')))\nORDER BY \n  total_purchase_amount DESC\nLIMIT 100;",
+    "5718fc84f29b7dc80db68cb4de9b8d67": "SELECT \n  LOWER(TRIM(COALESCE(Location, ''))) AS city,\n  SUM(Purchase_Amount::NUMERIC) AS total_purchase_amount\nFROM \n  ecommerce_behavior\nGROUP BY \n  LOWER(TRIM(COALESCE(Location, '')))\nORDER BY \n  total_purchase_amount DESC\nLIMIT 100;",
+    "4a54809a8964e95008b037b6d25e63d6": "SELECT \n  LOWER(TRIM(COALESCE(Location, ''))) AS city,\n  SUM(Purchase_Amount::NUMERIC) AS total_purchase_amount\nFROM \n  ecommerce_behavior\nWHERE \n  LOWER(TRIM(COALESCE(Purchase_Category, ''))) = 'electronics'\n  AND LOWER(TRIM(COALESCE(Gender, ''))) = 'male'\nGROUP BY \n  city\nORDER BY \n  total_purchase_amount DESC\nLIMIT 100;",
+    "d68ce1b1ade85b2885a5ae76b95aa00e": "SELECT \n  LOWER(TRIM(COALESCE(Location, ''))) AS city, \n  SUM(Purchase_Amount::NUMERIC) AS total_purchase_amount\nFROM \n  ecommerce_behavior\nWHERE \n  LOWER(TRIM(COALESCE(Purchase_Category, ''))) = 'home decor'\n  AND LOWER(TRIM(COALESCE(Gender, ''))) = 'male'\nGROUP BY \n  city\nLIMIT 100;",
+    "2244a7515ebffb0c20f17f3922b47b05": "SELECT Customer_ID, SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount\nFROM ecommerce_behavior\nGROUP BY Customer_ID\nORDER BY Total_Purchase_Amount DESC\nLIMIT 10;",
+    "e7201c4c2a67cd3acdda4cbb1fc9d9d8": "SELECT SUM(purchase_amount::NUMERIC) \nFROM ecommerce_behavior \nWHERE purchase_amount::NUMERIC > 1000000000::NUMERIC;",
+    "6e59fe82d0a5ec4919062802fa664b25": "SELECT * \nFROM ecommerce_behavior \nWHERE purchase_amount::NUMERIC::NUMERIC > 1000000000 \nLIMIT 100;",
+    "99381383b6e114df8abe753b3db0cbed": "SELECT * \nFROM ecommerce_behavior \nWHERE purchase_amount::NUMERIC::NUMERIC > 100000000 \nLIMIT 100;",
+    "d98f949b99e732a3bb96e401c2388b9c": "SELECT Customer_ID, SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount\nFROM ecommerce_behavior\nGROUP BY Customer_ID\nORDER BY Total_Purchase_Amount DESC\nLIMIT 10;",
+    "3fde203d582d34627a96759aba4c292f": "SELECT \n  LOWER(TRIM(COALESCE(purchase_category, ''))) AS category,\n  SUM(purchase_amount::NUMERIC) AS total_purchase_amount\nFROM \n  ecommerce_behavior\nGROUP BY \n  LOWER(TRIM(COALESCE(purchase_category, '')))\nORDER BY \n  total_purchase_amount DESC\nLIMIT 100;",
+    "cf47e6bedbb914d6490d1a48fdfd97ee": {
+        "sql": "SELECT Customer_ID, Purchase_Amount\nFROM ecommerce_behavior\nORDER BY Purchase_Amount DESC\nLIMIT 10;",
+        "chart": "kpi"
+    },
+    "f89cf69a2971762761d9be9a6f01d818": {
+        "sql": "SELECT Customer_ID, Purchase_Amount\nFROM ecommerce_behavior\nORDER BY Purchase_Amount DESC\nLIMIT 10;",
+        "chart": "kpi"
+    },
+    "0336d51caf39b6c26f4813a4d4da70c4": {
+        "sql": "SELECT SUM(purchase_amount::NUMERIC) AS total_purchase_amount \nFROM ecommerce_behavior;",
+        "chart": "kpi"
+    },
+    "417d399b31dbf55052a8fbf0028c2fae": {
+        "sql": "SELECT AVG(purchase_amount::NUMERIC) AS average_purchase_amount \nFROM ecommerce_behavior;",
+        "chart": "kpi"
+    },
+    "bac44bac5f225a0e9f5f1c3db8285a9b": {
+        "sql": "SELECT purchase_amount \nFROM ecommerce_behavior \nORDER BY purchase_amount DESC \nLIMIT 5;",
+        "chart": "kpi"
+    },
+    "0e513413439633bbb5fd054505ecea6c": {
+        "sql": "SELECT purchase_category, SUM(purchase_amount::NUMERIC) AS total_amount\nFROM ecommerce_behavior\nGROUP BY purchase_category\nORDER BY total_amount DESC\nLIMIT 5;",
+        "chart": "bar"
+    },
+    "90b105f4f41d26b0530f82d28fb82964": {
+        "sql": "SELECT \n  (COUNT(CASE WHEN LOWER(TRIM(COALESCE(Discount_Used, ''))) = 'yes' THEN 1 END) * 100.0 / COUNT(*)) \nAS percentage \nFROM ecommerce_behavior;",
+        "chart": "pie"
+    },
+    "796421613893308b884a6d9160c19473": {
+        "sql": "SELECT SUM(purchase_amount::NUMERIC) \nFROM ecommerce_behavior \nWHERE LOWER(TRIM(COALESCE(discount_used, ''))) = 'yes';",
+        "chart": "kpi"
+    },
+    "16dac4a4df26505794d84bf840c2e1e6": {
+        "sql": "SELECT * \nFROM ecommerce_behavior \nWHERE purchase_amount::NUMERIC > 100000::NUMERIC\nLIMIT 100;",
+        "chart": "kpi"
+    },
+    "3e2687d5d8e482f7e2d49bebf3163398": {
+        "sql": "SELECT COUNT(*) \nFROM ecommerce_behavior \nLIMIT 100;",
+        "chart": "kpi"
+    },
+    "d7318c15d28ee079d9417439fac41ac1": {
+        "sql": "SELECT purchase_category, SUM(purchase_amount::NUMERIC) \nFROM ecommerce_behavior \nGROUP BY purchase_category \nORDER BY SUM(purchase_amount::NUMERIC) DESC;",
+        "chart": "bar"
+    },
+    "61ff78331f7e832adbb1af1fe1e758ad": {
+        "sql": "SELECT \n  (COUNT(CASE WHEN LOWER(TRIM(COALESCE(Discount_Used, ''))) = 'yes' THEN 1 END) * 100.0 / COUNT(*)) \n  AS discount_usage_ratio \nFROM \n  ecommerce_behavior;",
+        "chart": "pie"
+    },
+    "2b332d90bcf217f68bbd359d601b5419": {
+        "sql": "SELECT purchase_category, SUM(purchase_amount::NUMERIC) AS total_amount\nFROM ecommerce_behavior\nGROUP BY purchase_category\nORDER BY total_amount DESC\nLIMIT 5;",
+        "chart": "bar"
+    },
+    "c28c03a09c7fb582313df1f0fde76323": {
+        "sql": "SELECT \n  Purchase_Category, \n  SUM(Purchase_Amount::NUMERIC) AS Total_Purchase_Amount,\n  AVG(Purchase_Amount::NUMERIC) AS Average_Purchase_Amount,\n  MAX(Purchase_Amount::NUMERIC) AS Max_Purchase_Amount,\n  MIN(Purchase_Amount::NUMERIC) AS Min_Purchase_Amount\nFROM \n  ecommerce_behavior\nGROUP BY \n  Purchase_Category\nLIMIT 100;",
+        "chart": "bar"
+    },
+    "821fb79e4a014885b4c0268eafdf1c3f": {
+        "sql": "SELECT \n  Purchase_Category, \n  SUM(Purchase_Amount::NUMERIC) AS total_purchase_amount\nFROM \n  ecommerce_behavior\nWHERE \n  LOWER(TRIM(COALESCE(Discount_Used, ''))) = 'yes'\nGROUP BY \n  Purchase_Category\nORDER BY \n  total_purchase_amount DESC\nLIMIT 3;",
+        "chart": "bar"
+    },
+    "78cc980d8e1fe0a65d2ca889771e9478": {
+        "sql": "SELECT \n  Location, \n  SUM(Purchase_Amount::NUMERIC) AS total_amount\nFROM \n  ecommerce_behavior\nGROUP BY \n  Location\nORDER BY \n  total_amount DESC\nLIMIT 5;",
+        "chart": "bar"
+    },
+    "df0c60dd59dd64bcf1463e7403ee176d": {
+        "sql": "SELECT LOWER(TRIM(COALESCE(Location, ''))) AS location, COUNT(*) AS purchase_count\nFROM ecommerce_behavior\nGROUP BY Location\nORDER BY purchase_count DESC\nLIMIT 5;",
+        "chart": "bar"
+    },
+    "82f3a7a8c8a65e7aec75df8775d19753": {
+        "sql": "SELECT AVG(purchase_amount::NUMERIC) AS average_purchase_amount FROM ecommerce_behavior ORDER BY AVG(purchase_amount::NUMERIC) DESC LIMIT 5",
+        "chart": "kpi"
+    },
+    "32e6873d2359b97a11550a6b66883c4e": {
+        "sql": "SELECT (SUM(CASE WHEN LOWER(TRIM(COALESCE(discount_used, ''))) = 'yes' THEN 1 ELSE 0 END) * 100.0) / NULLIF(COUNT(*), 0) FROM ecommerce_behavior",
+        "chart": "pie"
+    },
+    "9e1a664f3b4fbb19243f943c61fc5885": {
+        "sql": "SELECT * FROM ecommerce_behavior",
+        "chart": "kpi"
+    },
+    "b7d7d8fd6d3eadf4cec1c3ed9ab2e50e": {
+        "sql": "SELECT Purchase_Category, SUM(Purchase_Amount::NUMERIC) AS Total_Sales \nFROM ecommerce_behavior \nGROUP BY Purchase_Category \nORDER BY Total_Sales DESC \nLIMIT 3",
+        "chart": "bar"
+    },
+    "15865ba0e3c3b899f4599cb29a3f699f": {
+        "sql": "SELECT (SUM(CASE WHEN LOWER(TRIM(COALESCE(discount_used, ''))) = 'yes' THEN 1 ELSE 0 END) * 100.0) / NULLIF(COUNT(*), 0) FROM ecommerce_behavior",
+        "chart": "pie"
+    },
+    "6623fad6949db00b42148b27e0a3b01c": {
+        "sql": "SELECT purchase_category, SUM(purchase_amount::NUMERIC) \nFROM ecommerce_behavior \nGROUP BY purchase_category;",
+        "chart": "bar"
+    },
+    "a54a50c18f20743b24d5b3a2ec0a61aa": {
+        "sql": "SELECT SUM(purchase_amount::NUMERIC) FROM ecommerce_behavior",
+        "chart": "kpi"
+    },
+    "e1653851a2bdccf84e5b08657d800a11": {
+        "sql": "SELECT Purchase_Category, SUM(Purchase_Amount::NUMERIC) AS Total_Sales \nFROM ecommerce_behavior \nGROUP BY Purchase_Category \nORDER BY Total_Sales DESC \nLIMIT 5",
+        "chart": "bar"
+    },
+    "0f23d3c5042fe05f8b6d365a39426355": {
+        "sql": "SELECT SUM(purchase_amount::NUMERIC) FROM ecommerce_behavior",
+        "chart": "kpi"
+    },
+    "c6eb0b7ccee607e9204c9ea56664221f": {
+        "sql": "SELECT \n  purchase_category, \n  SUM(purchase_amount::NUMERIC) AS total_amount, \n  AVG(purchase_amount::NUMERIC) AS average_amount, \n  MAX(purchase_amount::NUMERIC) AS max_amount, \n  MIN(purchase_amount::NUMERIC) AS min_amount\nFROM \n  ecommerce_behavior\nGROUP BY \n  purchase_category\nORDER BY \n  total_amount DESC;",
+        "chart": "bar"
+    },
+    "756c15ea4bd71577a10ee4d7faa52c91": {
+        "sql": "SELECT location, SUM(purchase_amount::NUMERIC) \nFROM ecommerce_behavior \nGROUP BY location;",
+        "chart": "bar"
+    },
+    "c4744f1b1c8aaa5a9c4f535b1498ddd6": {
+        "sql": "SELECT purchase_category, SUM(purchase_amount::NUMERIC) AS total_amount \nFROM ecommerce_behavior \nGROUP BY purchase_category \nORDER BY total_amount DESC \nLIMIT 1",
+        "chart": "bar"
+    },
+    "5615f36cf50ca5e8978a536bcc6b4fb6": {
+        "sql": "SELECT purchase_amount FROM ecommerce_behavior",
+        "chart": "kpi"
+    }
+}

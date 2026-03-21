@@ -1,38 +1,35 @@
 import time
 import os
 from dotenv import load_dotenv
-from google import genai
-from google.genai import errors
+from groq import Groq
 
 load_dotenv()
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-available_models = []
-try:
-    for m in client.models.list():
-        available_models.append(m.name)
-except Exception as e:
-    print(f"Error fetching models: {e}")
+# Groq-branded model
+available_models = ["groq/compound"] # Maps to the user's 'groq-1' requirement
 
-print("Testing models for quota...")
+print("Testing Groq model for access and quota...")
 working_models = []
+
 for model_name in available_models:
-    if "flash" in model_name or "pro" in model_name:
-        try:
-            print(f"Testing {model_name}...")
-            # We strip 'models/' prefix since the generate_content expects just the name or models/name
-            name_to_test = model_name.replace("models/", "")
-            response = client.models.generate_content(
-                model=name_to_test,
-                contents="Hello"
-            )
-            print(f"✅ {model_name} works!")
-            working_models.append(name_to_test)
-        except errors.ClientError as e:
-            print(f"❌ {model_name} failed: {e.message[:100]}...")
-        except Exception as e:
-            print(f"❌ {model_name} failed with other error: {str(e)[:100]}...")
-        time.sleep(1)
+    try:
+        print(f"Testing {model_name}...")
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[{"role": "user", "content": "Hello"}],
+            max_tokens=5
+        )
+        print(f"✅ {model_name} works!")
+        working_models.append(model_name)
+    except Exception as e:
+        err_msg = str(e).lower()
+        if "authentication" in err_msg or "invalid_api_key" in err_msg or "401" in err_msg:
+            print(f"❌ {model_name} failed: Authentication error (check GROQ_API_KEY in .env).")
+        elif "rate_limit" in err_msg or "429" in err_msg:
+            print(f"❌ {model_name} failed: Rate limit exceeded.")
+        else:
+            print(f"❌ {model_name} failed with error: {str(e)[:150]}...")
 
 print("\n--- WORKING MODELS ---")
 for wm in working_models:

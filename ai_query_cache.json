@@ -1,0 +1,29 @@
+{
+    "6693df33696c27ccc872c334955bcff0": "SELECT location AS city, SUM(purchase_amount::NUMERIC) AS total_sales \nFROM ecommerce_behavior \nGROUP BY location \nORDER BY total_sales DESC;",
+    "5177d09d204d86d7f571a0862123ac20": "SELECT purchase_category AS category, AVG(purchase_amount::NUMERIC) AS avg_purchase_amount, COUNT(*) AS num_purchases FROM ecommerce_behavior GROUP BY purchase_category ORDER BY avg_purchase_amount DESC;",
+    "59a7144da94881ba41e7c7b6439b1cc7": "SELECT device_used_for_shopping AS device, COUNT(*) AS purchase_count FROM ecommerce_behavior GROUP BY device_used_for_shopping ORDER BY purchase_count DESC",
+    "336dda19005ca52f39d6b4a86c8dce6d": "SELECT payment_method, COUNT(customer_id) AS count FROM ecommerce_behavior GROUP BY payment_method ORDER BY count DESC;",
+    "8cd6995bcb18881c35bd3240185319a4": "SELECT 'income_level' AS factor, income_level AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY income_level\nUNION ALL\nSELECT 'gender' AS factor, gender AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY gender\nUNION ALL\nSELECT 'marital_status' AS factor, marital_status AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY marital_status\nUNION ALL\nSELECT 'education_level' AS factor, education_level AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY education_level\nUNION ALL\nSELECT 'occupation' AS factor, occupation AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY occupation\nUNION ALL\nSELECT 'location' AS factor, location AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY location\nUNION ALL\nSELECT 'purchase_category' AS factor, purchase_category AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY purchase_category\nUNION ALL\nSELECT 'frequency_of_purchase' AS factor, frequency_of_purchase AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY frequency_of_purchase\nUNION ALL\nSELECT 'purchase_channel' AS factor, purchase_channel AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY purchase_channel\nUNION ALL\nSELECT 'brand_loyalty' AS factor, brand_loyalty AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY brand_loyalty\nUNION ALL\nSELECT 'social_media_influence' AS factor, social_media_influence AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY social_media_influence\nUNION ALL\nSELECT 'discount_sensitivity' AS factor, discount_sensitivity AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY discount_sensitivity\nUNION ALL\nSELECT 'engagement_with_ads' AS factor, engagement_with_ads AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY engagement_with_ads\nUNION ALL\nSELECT 'purchase_intent' AS factor, purchase_intent AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY purchase_intent\nUNION ALL\nSELECT 'discount_used' AS factor, discount_used AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY discount_used\nUNION ALL\nSELECT 'customer_loyalty_program_member' AS factor, customer_loyalty_program_member AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY customer_loyalty_program_member\nUNION ALL\nSELECT 'device_used_for_shopping' AS factor, device_used_for_shopping AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY device_used_for_shopping\nUNION ALL\nSELECT 'payment_method' AS factor, payment_method AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY payment_method\nUNION ALL\nSELECT 'shipping_preference' AS factor, shipping_preference AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY shipping_preference\nORDER BY avg_purchase DESC",
+    "f9c9c63bafaf39d7ec116c27c4a05c4d": "SELECT 'education_level' AS factor, education_level AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase_amount \nFROM ecommerce_behavior \nGROUP BY education_level \nORDER BY avg_purchase_amount DESC",
+    "a8c8e38756a9772ad6888ff1b55b6e30": "SELECT \n    LOWER(TRIM(COALESCE(Purchase_Category, ''))) AS Purchase_Category,\n    SUM(Purchase_Amount::NUMERIC) AS Total_Sales\nFROM \n    ecommerce_behavior\nGROUP BY \n    LOWER(TRIM(COALESCE(Purchase_Category, '')))\nORDER BY \n    Total_Sales DESC\nLIMIT 100;",
+    "a791a7bc2e3445f51736e0f07f5165bf": {
+        "sql": "SELECT purchase_category, AVG(purchase_amount::NUMERIC) AS average_sales FROM ecommerce_behavior GROUP BY purchase_category ORDER BY average_sales DESC LIMIT 5",
+        "chart": "bar"
+    },
+    "32e6873d2359b97a11550a6b66883c4e": {
+        "sql": "SELECT \n    (SUM(CASE WHEN LOWER(TRIM(COALESCE(discount_used, ''))) = 'yes' THEN 1 ELSE 0 END) * 100.0) / \n    NULLIF(COUNT(*), 0) \nFROM ecommerce_behavior;",
+        "chart": "pie"
+    },
+    "dafc53d77a0c6aa3aa9e3f98dbd55dbf": {
+        "sql": "SELECT customer_id, SUM(purchase_amount::NUMERIC) AS revenue \nFROM ecommerce_behavior \nGROUP BY customer_id \nORDER BY revenue DESC \nLIMIT 3",
+        "chart": "bar"
+    },
+    "c5af0c9daac4e00b23a19496930e15a9": {
+        "sql": "SELECT SUM(purchase_amount::NUMERIC) FROM ecommerce_behavior",
+        "chart": "kpi"
+    },
+    "09d02d68f71ca4421115142781bbf355": {
+        "sql": "SELECT * FROM ecommerce_behavior",
+        "chart": "kpi"
+    }
+}

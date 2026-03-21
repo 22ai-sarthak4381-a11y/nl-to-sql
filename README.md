@@ -5,7 +5,7 @@ Business users and analysts frequently require immediate, ad-hoc data insights t
 
 ## Architecture
 1. **User Question:** The user types their question into the Streamlit dashboard input field.
-2. **AI Translation:** The system sends the prompt to the `Google Gemini AI` API which generates a structured PostgreSQL query matching the application schema.
+2. **AI Translation:** The system sends the prompt to the `Groq API (groq/compound)` which generates a structured PostgreSQL query matching the application schema.
 3. **Database Query:** The generated SQL is transmitted to a cloud-hosted `Supabase PostgreSQL` instance via a custom RPC function.
 4. **Insight Visualization:** The results are parsed by `Pandas` and automatically rendered on the Streamlit UI containing KPI Metrics, side-by-side Tables and dynamic Charts, and natural language AI Summaries.
 
@@ -18,7 +18,7 @@ Business users and analysts frequently require immediate, ad-hoc data insights t
 - **Frontend / Prototyping:** Streamlit
 - **Backend Processing:** Python 3, Pandas
 - **Database Architecture:** Supabase (PostgreSQL)
-- **Natural Language Processing:** Google Gemini AI API (`google-genai` package)
+- **Natural Language Processing:** Groq API (`groq` package, model: `groq/compound`)
 
 ## Results
-The completed system serves as a fully functional Business Intelligence tool. Users can type questions such as *"sales in Bangalore in March"*, and the AI reliably translates standard date strings to date ranges, executes the database request without case-sensitivity errors, and builds out dynamic visual comparisons accurately over the web application. 
+The completed system serves as a fully functional Business Intelligence tool. Users can type questions such as *"sales in Bangalore in March"*, and the AI reliably translates standard date strings to date ranges, executes the database request without case-sensitivity errors, and builds out dynamic visual comparisons accurately over the web application.

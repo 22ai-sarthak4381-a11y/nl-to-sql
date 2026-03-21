@@ -134,42 +134,10 @@ def fix_sql_type_casts(sql: str) -> str:
                 if f'{col}::TIMESTAMP' not in sql.upper():
                     sql = re.sub(rf'(?i)\b({col})\b', r'\1::TIMESTAMP', sql)
 
-    # Pass 4 — Add ::NUMERIC for numeric comparisons in WHERE clauses (e.g., col > 100)
-    # Requirement: detects column > number and converts to column::NUMERIC > number
-    def replacer(match):
-        column = match.group(1)
-        operator = match.group(2)
-        number = match.group(3)
-        return f"{column}::NUMERIC {operator} {number}"
-    
-    pattern = r'(\b\w+\b)\s*([<>]=?)\s*(\d+(\.\d+)?)'
-    sql = re.sub(pattern, replacer, sql)
-
     return sql
-
-
-def get_fallback_sql(user_query, table_name="ecommerce_behavior"):
-    """
-    Returns a predefined SQL query based on keywords when AI fails.
-    """
-    q = user_query.lower()
-    print(f"🔄 [Streamlit] Applying fallback logic for: '{user_query}'")
-    
-    if "average purchase" in q or "avg purchase" in q:
-        return f"SELECT AVG(purchase_amount::NUMERIC) AS average_spend FROM {table_name};"
-    elif "total sales" in q or "sum of sales" in q or "revenue" in q:
-        return f"SELECT SUM(purchase_amount::NUMERIC) AS total_revenue FROM {table_name};"
-    elif "top customer" in q or "best customer" in q:
-        return f"SELECT customer_id, SUM(purchase_amount::NUMERIC) AS total FROM {table_name} GROUP BY customer_id ORDER BY total DESC LIMIT 1;"
-    elif "count" in q or "number of" in q:
-        return f"SELECT COUNT(*) AS total_count FROM {table_name};"
-    
-    # Generic fallback
-    return f"SELECT * FROM {table_name} LIMIT 10;"
 
 # SQL generation function using Groq API
 def generate_sql_with_groq(nl_query, table_name="ecommerce_behavior", columns=None):
-
     """
     Converts a natural language query to a PostgreSQL SQL statement using the Groq API.
 
@@ -189,56 +157,52 @@ def generate_sql_with_groq(nl_query, table_name="ecommerce_behavior", columns=No
 
     columns_str = ", ".join(columns)
     prompt = f"""
-You are an expert SQL generator.
+Convert the following question into PostgreSQL SQL.
 
-Convert the user question into a valid PostgreSQL query for the table: {table_name}.
+CRITICAL RULES — follow ALL of them exactly:
+1. Table name is {table_name}
+2. Available columns: {columns_str}
 
-Table schema:
-- Customer_ID (INT)
-- Age (INT)
-- Gender (TEXT)
-- Income_Level (TEXT)
-- Marital_Status (TEXT)
-- Education_Level (TEXT)
-- Occupation (TEXT)
-- Location (TEXT)
-- Purchase_Category (TEXT)
-- Purchase_Amount (FLOAT)
-- Frequency_of_Purchase (TEXT)
-- Purchase_Channel (TEXT)
-- Brand_Loyalty (TEXT)
-- Product_Rating (FLOAT)
-- Time_Spent_on_Product_Researchhours (FLOAT)
-- Social_Media_Influence (TEXT)
-- Discount_Sensitivity (TEXT)
-- Return_Rate (FLOAT)
-- Customer_Satisfaction (INT)
-- Engagement_with_Ads (TEXT)
-- Device_Used_for_Shopping (TEXT)
-- Payment_Method (TEXT)
-- Time_of_Purchase (TEXT)
-- Discount_Used (TEXT)
-- Customer_Loyalty_Program_Member (TEXT)
-- Purchase_Intent (TEXT)
-- Shipping_Preference (TEXT)
-- Time_to_Decision (FLOAT)
+3. COLUMN TYPES (this is essential — do not guess):
 
-STRICT RULES:
-- Use ONLY these SQL functions: COUNT, SUM, AVG, MAX, MIN
-- For categorical columns, use equality (=) only
-- For Percentage Queries (keywords "percentage", "percent"): Calculate the ratio of rows meeting a condition to total rows, multiplied by 100.0. Use conditional aggregation:
-  e.g., SELECT (COUNT(CASE WHEN Discount_Used = 'Yes' THEN 1 END) * 100.0 / COUNT(*)) AS percentage FROM ecommerce_behavior;
-- For categorical Yes/No columns (Discount_Used, Customer_Loyalty_Program_Member) when using aggregation (SUM, AVG), use a CASE statement: 
-  CASE WHEN column = 'Yes' THEN 1 ELSE 0 END
-- NEVER use percentile_cont, window functions, or unsupported SQL
-- Always cast numeric columns in WHERE conditions using ::INT or ::FLOAT
-- Avoid SELECT * unless explicitly asked
-- Limit output rows using LIMIT 100 when returning rows
-- Handle NULL values safely (ignore or filter them if needed)
-- Return ONLY the SQL query, no explanation
+   TRUE NUMERIC columns (stored as text but contain numbers — MUST cast with ::NUMERIC
+   before using in SUM/AVG/MAX/MIN/CORR or any arithmetic):
+     purchase_amount, age, product_rating, return_rate,
+     customer_satisfaction, time_to_decision, time_spent_on_product_researchhours
 
-User Question:
-{nl_query}
+   CATEGORICAL TEXT columns (contain words like Low/Middle/High/Daily/Yes/No —
+   NEVER cast these to NUMERIC, doing so will cause a database error):
+     income_level, frequency_of_purchase, discount_sensitivity, brand_loyalty,
+     social_media_influence, engagement_with_ads, purchase_intent, discount_used,
+     customer_loyalty_program_member, gender, marital_status, education_level,
+     occupation, location, purchase_category, purchase_channel,
+     device_used_for_shopping, payment_method, shipping_preference
+
+   For questions about "factors influencing" something: use a single UNION ALL query,
+   NOT multiple separate SELECT statements. Each sub-query picks one categorical factor.
+   Example structure for 'what factors influence purchase amount':
+     SELECT 'income_level' AS factor, income_level AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY income_level
+     UNION ALL
+     SELECT 'gender' AS factor, gender AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY gender
+     UNION ALL
+     SELECT 'purchase_channel' AS factor, purchase_channel AS value, AVG(purchase_amount::NUMERIC) AS avg_purchase FROM ecommerce_behavior GROUP BY purchase_channel
+     ORDER BY avg_purchase DESC
+   Do NOT use CORR() with categorical columns.
+
+4. Correct casting examples:
+   CORRECT:   SUM(purchase_amount::NUMERIC)
+   CORRECT:   AVG(age::NUMERIC)
+   INCORRECT: SUM(income_level::NUMERIC)  <- income_level is categorical
+   INCORRECT: CORR(x, income_level::NUMERIC)  <- never CORR on categorical
+   CORRECT:   EXTRACT(MONTH FROM time_of_purchase::TIMESTAMP)
+   INCORRECT: EXTRACT(MONTH FROM time_of_purchase)  <- missing cast
+
+5. Use ILIKE for case-insensitive text searches.
+6. CRITICAL: Return ONLY a SINGLE SQL query — no markdown, no explanation, no code fences.
+7. NEVER return multiple separate SELECT statements. If you need to compare multiple
+   groups or factors, combine them into ONE query using UNION ALL.
+
+Question: {nl_query}
 """
 
     # --- Persistent file cache logic ---
@@ -280,11 +244,7 @@ User Question:
                 sql_text = sql_text.replace("```sql", "").replace("```", "").strip()
                 # Safety net: ensure numeric columns are always properly cast
                 sql_text = fix_sql_type_casts(sql_text)
-                
-                print("Final SQL:", sql_text)
-                
                 # Save to caches
-
                 st.session_state.cached_sql[query_hash] = sql_text
                 file_cache[query_hash] = sql_text
                 save_file_cache(file_cache)
@@ -305,12 +265,12 @@ User Question:
                     time.sleep(delay)
                     continue
                 else:
-                    break # Fallback below
+                    raise Exception("Groq API rate limit exceeded. Please try again in a moment.")
 
             # Authentication / key errors
             if "authentication" in err_msg or "invalid_api_key" in err_msg or "401" in err_msg:
                 print(f"❌ Groq Authentication Error: {e}")
-                break # Fallback below
+                raise Exception("Groq API authentication failed. Please check your GROQ_API_KEY in the .env file.")
 
             # Generic retry
             print(f"ERROR: Groq API failure on attempt {attempt+1}: {e}")
@@ -319,13 +279,7 @@ User Question:
                 time.sleep(delay)
                 continue
             else:
-                break # Fallback below
-    
-    # --- Step 2: Fallback Layer (reached if retries fail or explicit break) ---
-    print(f"⚠️ AI Generation failed or quota exceeded. Using fallback logic for: '{nl_query[:30]}...'")
-    sql_fallback = get_fallback_sql(nl_query, table_name)
-    return sql_fallback
-
+                raise Exception(f"Groq API error after {max_retries} attempts: {str(e)}")
 
 
 # Backward-compatible alias so dashboard.py import still works
