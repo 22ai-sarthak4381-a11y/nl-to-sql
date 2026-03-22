@@ -353,7 +353,8 @@ def handle_query():
                 return jsonify({"status": "error", "message": "Invalid column selection."}), 400
             
             # 3. Robust SQL Pattern
-            sql_query = f"SELECT * FROM ecommerce_behavior WHERE LOWER(TRIM(\"{field}\"::TEXT)) = LOWER(TRIM('{value}')) LIMIT 100"
+            active_table = get_table_name()
+            sql_query = f"SELECT * FROM {active_table} WHERE LOWER(TRIM(\"{field}\"::TEXT)) = LOWER(TRIM('{value}')) LIMIT 100"
             enhanced_query = f"Drill-down: {field}={value}"
             interpretation = {"metric": f"Details: {value}", "group_by": field, "operation": "Drill-down"}
             chart_type = "table"
@@ -579,7 +580,12 @@ def upload_file():
         active_table = get_table_name()
         
         # 1. Create table in Supabase via RPC (Serial atomic operations)
-        cols_sql = [f'"{col}" TEXT' for col in df.columns]
+        # Use proper column types to preserve numeric precision
+        def _col_type(col):
+            if pd.api.types.is_numeric_dtype(df[col]):
+                return 'NUMERIC'
+            return 'TEXT'
+        cols_sql = [f'"{col}" {_col_type(col)}' for col in df.columns]
         drop_query = f"DROP TABLE IF EXISTS {active_table}"
         create_query = f'CREATE TABLE {active_table} ({", ".join(cols_sql)})'
         
@@ -589,8 +595,9 @@ def upload_file():
             supabase.rpc("execute_sql", {"query": create_query}).execute()
             logger.info(f"Database table '{active_table}' created successfully.")
             
-            # 2. Insert data in chunks
-            data_to_insert = df.astype(str).to_dict(orient="records")
+            # 2. Insert data in chunks preserving native types
+            # Replace NaN with None so Supabase accepts JSON nulls
+            data_to_insert = df.replace({float('nan'): None}).to_dict(orient="records")
             chunk_size = 500
             for i in range(0, len(data_to_insert), chunk_size):
                 chunk = data_to_insert[i:i + chunk_size]
@@ -598,9 +605,8 @@ def upload_file():
             
             logger.info(f"Ingested {len(df)} rows into table '{active_table}'.")
         except Exception as db_err:
-            logger.error(f"Database Ingestion Failure details: {str(db_err)}")
-            # Even if ingestion fails (due to perms), we proceed as schema is already updated 
-            # for the generator.
+            logger.error(f"Database Ingestion Failure: {str(db_err)}")
+            return jsonify({"error": f"Failed to ingest data into database: {str(db_err)}"}), 500
         
         logger.info(f"Dataset '{file.filename}' processed and ingested. Schema updated.")
         return jsonify({
