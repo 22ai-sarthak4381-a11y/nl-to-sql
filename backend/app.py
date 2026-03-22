@@ -264,8 +264,9 @@ def normalize_query(query):
     )
     measure_col = active_mapping.get("measure") or get_metric_col(active_schema)
     group_col = active_mapping.get("group") or get_category_col(active_schema)
-    rating_col = next((col for col in numeric_cols if col != measure_col), SCHEMA.get("numeric_columns", ["product_rating"])[1] if len(SCHEMA.get("numeric_columns", [])) > 1 else "product_rating")
-    score_col = next((col for col in reversed(numeric_cols) if col != measure_col), SCHEMA.get("numeric_columns", ["customer_satisfaction"])[-1] if SCHEMA.get("numeric_columns") else "customer_satisfaction")
+    non_measure_numeric_cols = [col for col in numeric_cols if col != measure_col]
+    rating_col = non_measure_numeric_cols[0] if non_measure_numeric_cols else "product_rating"
+    score_col = non_measure_numeric_cols[-1] if non_measure_numeric_cols else "customer_satisfaction"
 
     synonym_map = {
         "spending": measure_col,

@@ -22,8 +22,7 @@ def test_normalize_query_switches_with_runtime_schema():
     })
     set_runtime_schema(demo_df)
     demo_normalized = normalize_query("total sales by city")
-    assert "purchase_amount" in demo_normalized
-    assert "location" in demo_normalized
+    assert demo_normalized == "total purchase_amount by location"
 
     upload_df = pd.DataFrame({
         "revenue": [200],
@@ -32,8 +31,7 @@ def test_normalize_query_switches_with_runtime_schema():
     })
     set_runtime_schema(upload_df)
     upload_normalized = normalize_query("total sales by city")
-    assert "revenue" in upload_normalized
-    assert "region" in upload_normalized
+    assert upload_normalized == "total revenue by region"
     assert "purchase_amount" not in upload_normalized
 
 
