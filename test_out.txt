@@ -1,13 +1,6 @@
-Question: Total sales amount by product
-Original SQL: SELECT product_name, SUM(sales_amount) AS total_sales
-FROM sales
-GROUP BY product_name;
-Cleaned SQL: SELECT product_name, SUM(sales_amount) AS total_sales
-FROM sales
-GROUP BY product_name
-DataFrame:
-  product_name  total_sales
-0          Oil         3600
-1        Wheat         3200
-2         Rice         9300
-3        Sugar         2800
+{
+  "upload_status": "success",
+  "active_table": "sales_data_123031",
+  "query_status": "error",
+  "first_row": "NONE"
+}

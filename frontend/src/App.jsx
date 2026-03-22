@@ -54,7 +54,66 @@ const Toast = ({ message, onClose }) => {
 
 // --- Helper Components ---
 
-const Sidebar = ({ currentPage, setCurrentPage, onUpload }) => {
+const SchemaInfo = ({ mapping, onSave }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [localMap, setLocalMap] = useState({});
+
+  useEffect(() => {
+    if (mapping?.current) setLocalMap(mapping.current);
+  }, [mapping]);
+
+  if (!mapping) return null;
+
+  const handleManualSave = async () => {
+    await onSave(localMap);
+    setIsEditing(false);
+  };
+
+  return (
+    <div className="section" style={{ marginTop: '20px', padding: '15px', background: 'rgba(0, 212, 255, 0.05)', borderRadius: '12px', border: '1px solid rgba(0, 212, 255, 0.1)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+        <h3 style={{ fontSize: '0.7rem', letterSpacing: '1px', color: '#00d4ff', margin: 0 }}>🧬 DATASET SCHEMA</h3>
+        {!isEditing ? (
+          <button onClick={() => setIsEditing(true)} style={{ background: 'none', border: 'none', color: '#00d4ff', fontSize: '0.65rem', cursor: 'pointer', textDecoration: 'underline' }}>Edit</button>
+        ) : (
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button onClick={handleManualSave} style={{ background: '#00d4ff', border: 'none', color: '#020617', fontSize: '0.6rem', padding: '2px 6px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>Save</button>
+            <button onClick={() => setIsEditing(false)} style={{ background: 'none', border: 'none', color: '#64748b', fontSize: '0.65rem', cursor: 'pointer' }}>Cancel</button>
+          </div>
+        )}
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {["Measure", "Category", "Filter"].map((role) => (
+          <div key={role} style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '0.75rem' }}>
+            <span style={{ color: '#94a3b8', fontSize: '0.65rem', textTransform: 'uppercase' }}>{role}</span>
+            {!isEditing ? (
+              <span style={{ color: '#fff', fontWeight: '500', background: 'rgba(255,255,255,0.05)', padding: '4px 8px', borderRadius: '4px' }}>
+                {mapping.current[role] || 'N/A'}
+              </span>
+            ) : (
+              <select 
+                value={localMap[role] || ''} 
+                onChange={(e) => setLocalMap({ ...localMap, [role]: e.target.value })}
+                style={{ width: '100%', background: '#020617', border: '1px solid #334155', color: '#fff', fontSize: '0.75rem', padding: '4px', borderRadius: '4px' }}
+              >
+                <option value="">None (Auto)</option>
+                {(role === 'Measure' ? mapping.available?.numeric : mapping.available?.categorical)?.map(col => (
+                  <option key={col} value={col}>{col}</option>
+                ))}
+              </select>
+            )}
+          </div>
+        ))}
+      </div>
+      <p style={{ fontSize: '0.65rem', color: '#64748b', marginTop: '12px', lineHeight: '1.4' }}>
+        {isEditing ? '⚠️ Selecting columns manually will override AI detection.' : 'ℹ️ The system mapped these roles for dynamic analysis.'}
+      </p>
+    </div>
+  );
+};
+
+const Sidebar = ({ currentPage, setCurrentPage, onUpload, mapping, onSaveMapping }) => {
   const [dataSource, setDataSource] = useState('demo');
 
   return (
@@ -78,6 +137,8 @@ const Sidebar = ({ currentPage, setCurrentPage, onUpload }) => {
           </div>
         )}
       </div>
+
+      <SchemaInfo mapping={mapping} onSave={onSaveMapping} />
 
       <div className="section" style={{ flexGrow: 1 }}>
         <h3>🧭 NAVIGATION</h3>
@@ -429,6 +490,33 @@ function App() {
   const [drillDownPath, setDrillDownPath] = useState([]);
   const [filters, setFilters] = useState({ category: 'all', gender: 'all', startDate: '', endDate: '' });
   const [toast, setToast] = useState(null);
+  const [mapping, setMapping] = useState(null);
+
+  useEffect(() => {
+    fetchMapping();
+  }, []);
+
+  const fetchMapping = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/schema-mapping');
+      setMapping(res.data);
+    } catch (err) {
+      console.warn("Failed to fetch schema mapping", err);
+    }
+  };
+
+  const handleSaveMapping = async (newMapping) => {
+    setLoading("🔄 Updating Dataset Overrides...");
+    try {
+      await axios.post('http://localhost:5000/api/schema-mapping', newMapping);
+      setToast("Manual override applied successfully!");
+      fetchMapping();
+    } catch (err) {
+      setToast("Failed to apply override.");
+    } finally {
+      setLoading(null);
+    }
+  };
 
 
   const handleQuery = async (e, customQuery = null) => {
@@ -508,13 +596,18 @@ function App() {
   };
 
   const handleFileUpload = async (file) => {
+    if (!file) return;
+    setLoading("📤 Uploading & Processing Dataset...");
     const formData = new FormData();
     formData.append('file', file);
     try {
-      await axios.post('http://localhost:5000/upload', formData);
-      alert('Success: File processed.');
+      await axios.post('http://localhost:5000/api/upload', formData);
+      setToast("Dataset processed successfully!");
+      fetchMapping(); // Refresh mapping display after upload
     } catch (err) {
-      alert('Upload failed.');
+      setError("Failed to upload dataset.");
+    } finally {
+      setLoading(null);
     }
   };
 
@@ -537,7 +630,13 @@ function App() {
 
   return (
     <div className="layout">
-      <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} onUpload={handleFileUpload} />
+      <Sidebar 
+        currentPage={currentPage} 
+        setCurrentPage={setCurrentPage} 
+        onUpload={handleFileUpload}
+        mapping={mapping} 
+        onSaveMapping={handleSaveMapping}
+      />
       <main className="main-content">
         {currentPage === 'ai-query' && (
           <AIQueryPage 

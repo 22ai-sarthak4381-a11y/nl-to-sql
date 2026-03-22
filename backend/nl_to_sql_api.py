@@ -1,3 +1,4 @@
+print("USING nl_to_sql_api.py")
 # backend/nl_to_sql_api.py (Clean version for Flask API)
 import os
 from dotenv import load_dotenv
@@ -11,12 +12,26 @@ import re
 load_dotenv()
 
 import logging
+from schema_config import SCHEMA, get_metric_col, get_category_col, get_location_col, get_date_col, get_table_name, get_active_schema, get_active_mapping, refine_mapping_with_synonyms
 
 # Initialize Groq client
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 # Configure Logger for this module
 logger = logging.getLogger(__name__)
+
+def match_column(user_term, columns):
+    """
+    Safely matches a user term to an actual column in the dataset schema.
+    Returns the column name in LOWERCASE to match PostgreSQL standards.
+    """
+    if not user_term or not columns:
+        return None
+    user_term = user_term.lower()
+    for col in columns:
+        if user_term in col.lower():
+            return col.lower() # FORCE LOWERCASE
+    return None
 
 # --- Column Mapping Configuration ---
 COLUMN_SYNONYMS = {
@@ -85,8 +100,8 @@ def apply_semantic_layer(query):
     logger.info(f"Semantic Layer applied. Enhanced query: {enhanced_query}")
     return enhanced_query
 
-# Default columns
-DEFAULT_COLUMNS = [
+# Legacy Fallback Definitions (Used if SCHEMA is missing or for backward compatibility)
+DEFAULT_COLUMNS = SCHEMA.get("all_columns", [
     "customer_id", "age", "gender", "income_level", "marital_status", "education_level",
     "occupation", "location", "purchase_category", "purchase_amount",
     "frequency_of_purchase", "purchase_channel", "brand_loyalty", "product_rating",
@@ -94,7 +109,7 @@ DEFAULT_COLUMNS = [
     "return_rate", "customer_satisfaction", "engagement_with_ads", "device_used_for_shopping",
     "payment_method", "time_of_purchase", "discount_used", "customer_loyalty_program_member",
     "purchase_intent", "shipping_preference", "time_to_decision"
-]
+])
 
 # Path for persistent cache
 CACHE_FILE = "ai_query_cache.json"
@@ -119,18 +134,18 @@ MODEL_MAPPING = {
     "groq-1": "llama-3.3-70b-versatile"
 }
 
-NUMERIC_COLUMNS = {
+NUMERIC_COLUMNS = set(SCHEMA.get("numeric_columns", [
     "purchase_amount", "age", "product_rating", "time_spent_on_product_researchhours",
     "return_rate", "customer_satisfaction", "time_to_decision",
-}
+]))
 
-CATEGORICAL_COLUMNS = {
+CATEGORICAL_COLUMNS = set(SCHEMA.get("categorical_columns", [
     "income_level", "frequency_of_purchase", "discount_sensitivity", "brand_loyalty",
     "social_media_influence", "engagement_with_ads", "purchase_intent", "discount_used",
     "customer_loyalty_program_member", "gender", "marital_status", "education_level",
     "occupation", "location", "purchase_category", "purchase_channel",
     "device_used_for_shopping", "payment_method", "shipping_preference"
-}
+]))
 
 DATE_COLUMNS = {
     "time_of_purchase",
@@ -207,7 +222,7 @@ def fix_sql_type_casts(sql: str) -> str:
 def detect_intents(query: str):
     """
     Identifies specific business intents in the user query using keyword mapping.
-    Supports multiple intents per query.
+    Supports multiple intents per query. Returns empty list if no clear intent found.
     """
     q = query.lower()
     intents = []
@@ -217,16 +232,12 @@ def detect_intents(query: str):
         intents.append("ranking")
         
     # 2. Aggregation Intent
-    if any(word in q for word in ["average", "avg", "mean", "sum", "total", "revenue", "sales", "earnings"]):
+    if any(word in q for word in ["average", "avg", "mean", "sum", "total", "revenue", "sales", "earnings", "count", "number of", "how many"]):
         intents.append("aggregation")
         
     # 3. Ratio/Percentage Intent
     if any(word in q for word in ["percentage", "ratio", "proportion", "%", "fraction"]):
         intents.append("ratio")
-        
-    # Default to general if no specific intent found
-    if not intents:
-        intents.append("general")
         
     return intents
 
@@ -268,13 +279,109 @@ def extract_top_k(query: str):
         
     return None
 
-def get_fallback_sql(user_query, table_name="ecommerce_behavior"):
+# --- Dynamic SQL Generation Engine ---
+def generate_dynamic_sql(query, schema, mapping, table_name):
+    """
+    Programmatically constructs SQL based on schema mapping for standard intents.
+    Enforces strict column validation and case-safe naming to prevent SQL errors.
+    """
+    if not schema or not mapping:
+        return None, None
+
+    q = query.lower()
+    cols = schema.get("columns", [])
+    numeric_cols = schema.get("numeric", [])
+    categorical_cols = schema.get("categorical", [])
+    
+    # --- PHASE 1: Validate & Fallback columns ---
+    # We ensure measure, group, and discount roles point to REAL columns in the dataset.
+    
+    # 1. Measure (Numerical)
+    measure = mapping.get("measure")
+    if not measure or measure not in cols:
+        measure = numeric_cols[0] if numeric_cols else None
+        
+    # 2. Group (Categorical)
+    group = mapping.get("group")
+    if not group or group not in cols:
+        group = categorical_cols[0] if categorical_cols else None
+        
+    # 3. Discount (Filter/Flag)
+    discount = mapping.get("discount")
+    if discount and discount not in cols:
+        discount = None 
+
+    # --- PHASE 1.5: Strict Validation & Fallback ---
+    # Return user-friendly error if we cannot find columns to fulfill the query
+    if not measure or measure not in cols:
+        available_cols = ", ".join(cols[:10])
+        return f"Error: Could not find a suitable numeric column. Available columns: [{available_cols}]", None
+    
+    if not group or group not in cols:
+        available_cols = ", ".join(cols[:10])
+        return f"Error: Could not find a suitable grouping column. Available columns: [{available_cols}]", None
+
+    # --- PHASE 2: Build Intent Logic ---
+    is_count = any(word in q for word in ["count", "number of", "how many"])
+    is_total = any(word in q for word in ["total", "sum", "revenue", "sales", "spending", "amount"])
+    is_avg = any(word in q for word in ["average", "avg", "mean"])
+    grouping_keywords = ["by ", "per ", "breakdown", "distribution", "split by"]
+    is_grouped = any(word in q for word in grouping_keywords) or (group.lower() in q if group else False)
+    
+    # --- PHASE 3: Calculate Metrics (Forced Lowercase) ---
+    chart = "bar"
+    is_percentage = "percentage" in q or "percent" in q or "%" in q
+    
+    if is_percentage and discount:
+        metric_sql = f"(SUM(CASE WHEN LOWER(TRIM({discount}::TEXT)) IN ('yes', 'true', '1') THEN 1 ELSE 0 END) * 100.0) / NULLIF(COUNT(*), 0)"
+        alias = "percentage_share"
+        chart = "pie"
+    else:
+        metric_sql = f"COUNT(*)" if is_count else f"SUM({measure}::NUMERIC)" if is_total else f"AVG({measure}::NUMERIC)" if is_avg else f"SUM({measure}::NUMERIC)"
+        alias = "total_count" if is_count else "total_value"
+    
+    # --- PHASE 4: Construct Query (Forced Lowercase - NO QUOTES) ---
+    if is_grouped and group:
+        sql = f"SELECT {group}, {metric_sql} AS {alias} FROM {table_name} GROUP BY {group} ORDER BY {alias} DESC"
+        chart = "bar" if not is_percentage else "pie"
+    else:
+        sql = f"SELECT {metric_sql} AS {alias} FROM {table_name}"
+        chart = "kpi" if not is_percentage else "pie"
+        
+    # Apply optional filters
+    if not is_percentage and "discount" in q and discount:
+        where_clause = f" WHERE LOWER(TRIM({discount}::TEXT)) IN ('yes', 'true', '1')"
+        if "GROUP BY" in sql:
+            sql = sql.replace(" GROUP BY", f"{where_clause} GROUP BY")
+        else:
+            sql += where_clause
+            
+    final_sql = sql.strip() + ";"
+    
+    # --- MANDATORY DEBUG LOGGING (Requirement: REVISED LABELS) ---
+    print("DB COLUMNS:", [c.lower() for c in cols])
+    print("FINAL GROUP:", group)
+    print("FINAL MEASURE:", measure)
+    print("FINAL SQL:", final_sql)
+    
+    return final_sql, chart
+
+def get_fallback_sql(user_query, table_name=None):
     """
     Returns a predefined SQL query based on keywords when AI fails.
+    Highly decoupled using schema abstraction.
     """
+    if not table_name:
+        table_name = get_table_name()
+        
     q = user_query.lower()
     logger.info(f"Fallback logic triggered for query: {user_query}")
     print(f"🔄 Applying fallback logic for: '{user_query}'")
+    
+    # Decoupled Schema References
+    metric_col = get_metric_col()
+    category_col = get_category_col()
+    location_col = get_location_col()
     
     # Intent Mapping
     is_top = any(word in q for word in ["highest", "top", "best", "rank"])
@@ -282,25 +389,30 @@ def get_fallback_sql(user_query, table_name="ecommerce_behavior"):
     is_count = any(word in q for word in ["count", "number", "how many", "users", "orders"])
     is_avg = any(word in q for word in ["average", "avg", "mean", "per user"])
 
-    metric = "COUNT(*)" if is_count else "SUM(purchase_amount::NUMERIC)" if is_revenue else "AVG(purchase_amount::NUMERIC)" if is_avg else "*"
+    # Force lowercase for PostgreSQL standards
+    metric_col = metric_col.lower() if metric_col else ""
+    category_col = category_col.lower() if category_col else ""
+    location_col = location_col.lower() if location_col else ""
+
+    metric_sql = "COUNT(*)" if is_count else f"SUM({metric_col}::NUMERIC)" if is_revenue else f"AVG({metric_col}::NUMERIC)" if is_avg else "*"
     alias = "total_count" if is_count else "total_revenue" if is_revenue else "average_spend" if is_avg else "records"
 
-    if "category" in q:
-        sql = f"SELECT purchase_category, {metric} AS {alias} FROM {table_name} GROUP BY purchase_category"
+    if "category" in q or category_col in q:
+        sql = f"SELECT {category_col}, {metric_sql} AS {alias} FROM {table_name} GROUP BY {category_col}"
         if is_top: sql += f" ORDER BY {alias} DESC LIMIT 1"
         return sql + ";"
 
-    if "location" in q or "city" in q:
-        sql = f"SELECT location, {metric} AS {alias} FROM {table_name} GROUP BY location"
+    if "location" in q or "city" in q or location_col in q:
+        sql = f"SELECT {location_col}, {metric_sql} AS {alias} FROM {table_name} GROUP BY {location_col}"
         if is_top: sql += f" ORDER BY {alias} DESC LIMIT 1"
         return sql + ";"
 
     if is_revenue:
-        return f"SELECT SUM(purchase_amount::NUMERIC) AS total_revenue FROM {table_name};"
+        return f"SELECT SUM({metric_col}::NUMERIC) AS total_revenue FROM {table_name};"
     elif is_count:
         return f"SELECT COUNT(*) AS total_count FROM {table_name};"
     elif is_avg:
-        return f"SELECT AVG(purchase_amount::NUMERIC) AS average_spend FROM {table_name};"
+        return f"SELECT AVG({metric_col}::NUMERIC) AS average_spend FROM {table_name};"
     
     # Block default SELECT * unless explicitly asked
     if any(word in q for word in ["all data", "show everything", "everything", "all records"]):
@@ -362,53 +474,76 @@ def generate_sql(nl_query, table_name="ecommerce_behavior", columns=None):
     
     # Step 0.5: Detect Intents (Additive Enhancement)
     detected_intents = detect_intents(enhanced_query)
-    intents_str = ", ".join(detected_intents)
+    intents_str = ", ".join(detected_intents) if detected_intents else "general"
     
     # Step 0.6: Extract Column Hints (Additive Enhancement)
     # Using nl_query (original) to catch synonyms accurately
     column_hints = extract_column_hints(nl_query, COLUMN_SYNONYMS)
     hints_str = json.dumps(column_hints) if column_hints else "None"
     
-    # Step 0.7: Detect Top-K Preference (Additive Enhancement)
+    # --- Step 0.7: Unknown Query Handling (New Safety Layer) ---
+    active_schema = get_active_schema()
+    active_mapping = get_active_mapping()
+    active_mapping = refine_mapping_with_synonyms(nl_query, active_mapping)
+    
+    # Check if we can proceed with any form of generation
+    # We check both the original AND enhanced query for safety
+    safe_keywords = ["total", "sum", "avg", "count", "list", "show", "purchase_amount", "location", "category", "rating", "satisfaction"]
+    has_basic_intent = any(k in nl_query.lower() or k in enhanced_query.lower() for k in safe_keywords)
+    
+    if not detected_intents and not has_basic_intent:
+        # If mapping is also weak or empty, it's garbage.
+        if not active_mapping or not active_mapping.get("measure") or active_mapping.get("measure") == SCHEMA.get("metric_column"):
+             # Weak evidence of intent -> Block nonsense
+             logger.warning(f"Unknown query blocked: {nl_query}")
+             return None, nl_query, "Sorry, I couldn't understand the query. Try rephrasing with more business details."
+
+    # Step 0.8: Detect Top-K Preference (Additive Enhancement)
     top_k = extract_top_k(nl_query)
     top_k_str = str(top_k) if top_k else "None"
     
-    # Step 1: AI-based SQL generation
+    # --- Step 0.8: Dynamic SQL Generation Layer (New High-Priority Tier) ---
+    active_schema = get_active_schema()
+    active_mapping = get_active_mapping()
+    
+    # Contextualize mapping based on query synonyms
+    active_mapping = refine_mapping_with_synonyms(nl_query, active_mapping)
+    print("Column Mapping:", active_mapping)
+    
+    # --- Step 0.8: Safe Fallback (Guaranteed Analytical Roles) ---
+    if not active_mapping.get("measure"):
+        active_mapping["measure"] = active_schema.get("numeric", [None])[0]
+    if not active_mapping.get("group"):
+        active_mapping["group"] = active_schema.get("categorical", [None])[0]
+    
+    if active_mapping["measure"]: print(f"Fallback Applied: Measure -> {active_mapping['measure']}")
+    if active_mapping["group"]: print(f"Fallback Applied: Group -> {active_mapping['group']}")
+    
+    # Try dynamic generation for standard analytical intents
+    dynamic_sql, dynamic_chart = generate_dynamic_sql(enhanced_query, active_schema, active_mapping, table_name)
+    
+    if dynamic_sql:
+        if dynamic_sql.startswith("Error:"):
+            logger.warning(f"Dynamic SQL Generator failed validation: {dynamic_sql}")
+            return None, nl_query, dynamic_sql # Return None as SQL to trigger clean error in app.py
+        logger.info(f"Dynamic SQL Generator successful for: {nl_query}")
+        return dynamic_sql, enhanced_query, dynamic_chart
+
+    # Step 1: AI-based SQL generation (LLM Fallback/Primary for Complex Queries)
     try:
         columns_str = ", ".join(columns)
         prompt = f"""
 You are an expert SQL generator for a Business Insights Dashboard.
 Your goal is to convert the user's natural language question into a valid, optimized PostgreSQL query for the table: {table_name}.
 
---- TABLE SCHEMA ---
-- Customer_ID (INT)
-- Age (INT)
-- Gender (TEXT)
-- Income_Level (TEXT)
-- Marital_Status (TEXT)
-- Education_Level (TEXT)
-- Occupation (TEXT)
-- Location (TEXT)
-- Purchase_Category (TEXT)
-- Purchase_Amount (FLOAT) -- This is the 'Sales' or 'Revenue' or 'Spending'
-- Frequency_of_Purchase (TEXT)
-- Purchase_Channel (TEXT)
-- Brand_Loyalty (TEXT)
-- Product_Rating (FLOAT)
-- Time_Spent_on_Product_Researchhours (FLOAT)
-- Social_Media_Influence (TEXT)
-- Discount_Sensitivity (TEXT)
-- Return_Rate (FLOAT)
-- Customer_Satisfaction (INT)
-- Engagement_with_Ads (TEXT)
-- Device_Used_for_Shopping (TEXT)
-- Payment_Method (TEXT)
-- Time_of_Purchase (TEXT)
-- Discount_Used (TEXT) -- Yes/No
-- Customer_Loyalty_Program_Member (TEXT) -- Yes/No
-- Purchase_Intent (TEXT)
-- Shipping_Preference (TEXT)
-- Time_to_Decision (FLOAT)
+--- TABLE SCHEMA (STRICT) ---
+The following columns are the ONLY ones available in the database table '{table_name}'.
+{chr(10).join([f"- {col} ({'NUMERIC' if col in active_schema.get('numeric', []) else 'TEXT'})" for col in active_schema.get('columns', [])])}
+
+⚠️ SCHEMA INTEGRITY RULE:
+- Use ONLY the columns listed above. 
+- DO NOT guess, invent, or assume column names (like 'product_id', 'revenue', etc.) if they are not explicitly listed in the schema.
+- If a requested metric or dimension is missing, use the most relevant column from the schema or the provided COLUMN HINTS.
 
 --- SEMANTIC GUIDANCE (CONTEXT) ---
 1. DETECTED INTENTS: {intents_str}
@@ -421,9 +556,9 @@ Your goal is to convert the user's natural language question into a valid, optim
    - Return ONLY the SQL query. No explanation, no markdown blocks.
 
 2. METRIC SELECTION:
-   - "Sales", "Revenue", "Earnings", "Total Amount" -> Use SUM(purchase_amount)
+   - "Sales", "Revenue", "Earnings", "Total Amount" -> Use SUM({active_mapping.get('measure', 'value')}::NUMERIC)
    - "Count", "Number", "How many", "Orders", "Transactions" -> Use COUNT(*)
-   - "Average", "Mean", "Per User" -> Use AVG(purchase_amount)
+   - "Average", "Mean", "Per User" -> Use AVG({active_mapping.get('measure', 'value')}::NUMERIC)
 
 3. PERCENTAGE / RATIO calculations (CRITICAL):
    - DO NOT use COUNT(condition).
@@ -434,7 +569,7 @@ Your goal is to convert the user's natural language question into a valid, optim
 
 4. CATEGORICAL FILTERS:
    - Always use LOWER(TRIM(COALESCE(column_name, ''))) = 'lowercase_val'.
-   - For Yes/No columns like 'Discount_Used', use: LOWER(TRIM(COALESCE(discount_used, ''))) = 'yes'.
+   - For filter/discount columns, e.g. '{active_mapping.get('discount', 'discount_used')}', use: LOWER(TRIM(COALESCE({active_mapping.get('discount', 'discount_used')}, ''))) = 'yes'.
 
 5. TOP-K / LIMIT:
    - If 'Top-K Preference' is a number, apply LIMIT accordingly.
@@ -471,6 +606,36 @@ Your goal is to convert the user's natural language question into a valid, optim
             
             print(f"Final SQL: {sql_text}")
             logger.info(f"AI SQL Generation complete. Length: {len(sql_text)}")
+            
+            # --- MANDATORY DEBUG LOGS ---
+            print("Schema Columns:", active_schema.get("columns", []))
+            print("Mapping:", active_mapping)
+            print("Generated SQL:", sql_text)
+            
+            # --- Step 1.2: SQL Schema Auditor & Auto-Correction (New Safety Layer) ---
+            # Automatically corrects known hallucinations based on active schema
+            sql_upper = sql_text.upper()
+            
+            # Defensive Column Resolution
+            suggested_group = active_mapping.get("group") or (active_schema.get("categorical", [None])[0]) or (active_schema.get("columns", ["column_1"])[0])
+            suggested_measure = active_mapping.get("measure") or (active_schema.get("numeric", [None])[0]) or (active_schema.get("columns", ["column_1"])[0])
+            
+            hallucination_map = {
+                "PRODUCT_ID": suggested_group,
+                "PRODUCTID": suggested_group,
+                "REVENUE": suggested_measure,
+                "SALES": suggested_measure
+            }
+            
+            for hallucination, correction in hallucination_map.items():
+                if hallucination in sql_upper:
+                    # Check if it was a real column (already case-insensitive)
+                    existing_cols = [c.lower() for c in active_schema.get("columns", [])]
+                    if hallucination.lower() not in existing_cols:
+                        logger.warning(f"AUDIT FAIL: Auto-correcting hallucinated column '{hallucination}' in generated SQL.")
+                        sql_text = re.sub(rf'(?i)\b{hallucination}\b', str(correction), sql_text)
+            
+            print("Final SQL Query:", sql_text)
             
             # Step 1.5: Chart Suggestion (Additive Enhancement)
             suggested_chart = suggest_chart_type(nl_query, detected_intents, sql_text)

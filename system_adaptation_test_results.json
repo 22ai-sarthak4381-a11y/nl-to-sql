@@ -1,0 +1,44 @@
+{
+    "Dataset_1_Standard": [
+        {
+            "query": "total sales by category",
+            "sql": "SELECT purchase_category, SUM(purchase_amount::NUMERIC) AS total_value FROM ecommerce_behavior GROUP BY purchase_category ORDER BY total_value DESC;",
+            "chart": "bar",
+            "insight": "Top category dominates significantly."
+        },
+        {
+            "query": "percentage of discount used",
+            "sql": "SELECT (SUM(CASE WHEN LOWER(TRIM(discount_used::TEXT)) IN ('yes', 'true', '1') THEN 1 ELSE 0 END) * 100.0) / NULLIF(COUNT(*), 0) AS percentage_share FROM ecommerce_behavior;",
+            "chart": "pie",
+            "insight": "Balanced distribution."
+        }
+    ],
+    "Dataset_2_Alt_Names": [
+        {
+            "query": "total revenue by type",
+            "sql": "SELECT product_type, SUM(total_price::NUMERIC) AS total_value FROM ecommerce_behavior GROUP BY product_type ORDER BY total_value DESC;",
+            "chart": "bar",
+            "insight": "Top category dominates significantly."
+        },
+        {
+            "query": "average sales with discount",
+            "sql": "SELECT COUNT(*) AS total_count FROM ecommerce_behavior WHERE LOWER(TRIM(discount_flag::TEXT)) IN ('yes', 'true', '1');",
+            "chart": "kpi",
+            "insight": "Balanced distribution."
+        }
+    ],
+    "Dataset_3_Education": [
+        {
+            "query": "average exam_score by subject",
+            "sql": "SELECT subject, AVG(exam_score::NUMERIC) AS total_value FROM ecommerce_behavior GROUP BY subject ORDER BY total_value DESC;",
+            "chart": "bar",
+            "insight": "Balanced distribution."
+        },
+        {
+            "query": "percentage of students passed",
+            "sql": "SELECT SUM(exam_score::NUMERIC) AS total_value FROM ecommerce_behavior;",
+            "chart": "pie",
+            "insight": "Balanced distribution."
+        }
+    ]
+}

@@ -1,6 +1,8 @@
-streamlit
 pandas
 supabase
 groq
 python-dotenv
-plotly
+httpx
+flask
+flask-cors
+scikit-learn

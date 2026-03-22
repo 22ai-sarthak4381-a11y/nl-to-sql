@@ -1,0 +1,52 @@
+2026-03-21 22:05:24,249 - INFO - Initializing dynamic schema detection for table: ecommerce_behavior
+2026-03-21 22:05:24,757 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=%2A&limit=1 "HTTP/2 200 OK"
+2026-03-21 22:05:24,760 - INFO - Dynamically Detected Schema: {'columns': ['customer_id', 'age', 'gender', 'income_level', 'marital_status', 'education_level', 'occupation', 'location', 'purchase_category', 'purchase_amount', 'frequency_of_purchase', 'purchase_channel', 'brand_loyalty', 'product_rating', 'time_spent_on_product_researchhours', 'social_media_influence', 'discount_sensitivity', 'return_rate', 'customer_satisfaction', 'engagement_with_ads', 'device_used_for_shopping', 'payment_method', 'time_of_purchase', 'discount_used', 'customer_loyalty_program_member', 'purchase_intent', 'shipping_preference', 'time_to_decision'], 'numeric': ['age', 'purchase_amount', 'product_rating', 'time_spent_on_product_researchhours', 'return_rate', 'customer_satisfaction', 'time_to_decision'], 'categorical': ['customer_id', 'gender', 'income_level', 'marital_status', 'education_level', 'occupation', 'location', 'purchase_category', 'frequency_of_purchase', 'purchase_channel', 'brand_loyalty', 'social_media_influence', 'discount_sensitivity', 'engagement_with_ads', 'device_used_for_shopping', 'payment_method', 'time_of_purchase', 'discount_used', 'customer_loyalty_program_member', 'purchase_intent', 'shipping_preference'], 'datetime': []}
+2026-03-21 22:05:24,766 - INFO - Final Column Mapping: {'group': 'purchase_category', 'measure': 'purchase_amount', 'discount': 'discount_sensitivity'}
+2026-03-21 22:05:24,766 - INFO - Successfully detected and stored dynamic schema.
+2026-03-21 22:10:24,540 - INFO - Initializing dynamic schema detection for table: ecommerce_behavior
+2026-03-21 22:10:25,164 - INFO - HTTP Request: GET https://qalwstleimbxrjeqyyqh.supabase.co/rest/v1/ecommerce_behavior?select=%2A&limit=1 "HTTP/2 200 OK"
+2026-03-21 22:10:25,167 - INFO - Dynamically Detected Schema: {'columns': ['customer_id', 'age', 'gender', 'income_level', 'marital_status', 'education_level', 'occupation', 'location', 'purchase_category', 'purchase_amount', 'frequency_of_purchase', 'purchase_channel', 'brand_loyalty', 'product_rating', 'time_spent_on_product_researchhours', 'social_media_influence', 'discount_sensitivity', 'return_rate', 'customer_satisfaction', 'engagement_with_ads', 'device_used_for_shopping', 'payment_method', 'time_of_purchase', 'discount_used', 'customer_loyalty_program_member', 'purchase_intent', 'shipping_preference', 'time_to_decision'], 'numeric': ['age', 'purchase_amount', 'product_rating', 'time_spent_on_product_researchhours', 'return_rate', 'customer_satisfaction', 'time_to_decision'], 'categorical': ['customer_id', 'gender', 'income_level', 'marital_status', 'education_level', 'occupation', 'location', 'purchase_category', 'frequency_of_purchase', 'purchase_channel', 'brand_loyalty', 'social_media_influence', 'discount_sensitivity', 'engagement_with_ads', 'device_used_for_shopping', 'payment_method', 'time_of_purchase', 'discount_used', 'customer_loyalty_program_member', 'purchase_intent', 'shipping_preference'], 'datetime': []}
+2026-03-21 22:10:25,167 - INFO - Final Column Mapping: {'group': 'purchase_category', 'measure': 'purchase_amount', 'discount': 'discount_sensitivity'}
+2026-03-21 22:10:25,167 - INFO - Successfully detected and stored dynamic schema.
+2026-03-21 22:10:25,171 - INFO - Dynamically Detected Schema: {'columns': ['purchase_amount', 'purchase_category', 'discount_used'], 'numeric': ['purchase_amount'], 'categorical': ['purchase_category', 'discount_used'], 'datetime': []}
+2026-03-21 22:10:25,171 - INFO - Final Column Mapping: {'measure': 'purchase_amount', 'group': 'purchase_category', 'discount': 'discount_used'}
+2026-03-21 22:10:25,370 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 22:10:25,383 - INFO - Semantic Layer applied. Enhanced query: total sales by category
+2026-03-21 22:10:25,384 - INFO - Query tokens mapped to roles: sales -> measure, category -> group
+2026-03-21 22:10:25,385 - INFO - Query tokens mapped to roles: sales -> measure, category -> group
+2026-03-21 22:10:25,385 - INFO - Dynamic SQL Generator successful for: total sales by category
+2026-03-21 22:10:25,593 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 22:10:25,595 - INFO - Semantic Layer applied. Enhanced query: percentage of discount used
+2026-03-21 22:10:25,595 - INFO - Query tokens mapped to roles: discount -> discount
+2026-03-21 22:10:25,595 - INFO - Query tokens mapped to roles: discount -> discount
+2026-03-21 22:10:25,595 - INFO - Dynamic SQL Generator successful for: percentage of discount used
+2026-03-21 22:10:25,595 - INFO - Dynamically Detected Schema: {'columns': ['total_price', 'product_type', 'discount_flag'], 'numeric': ['total_price'], 'categorical': ['product_type', 'discount_flag'], 'datetime': []}
+2026-03-21 22:10:25,595 - INFO - Final Column Mapping: {'measure': 'total_price', 'group': 'product_type', 'discount': 'discount_flag'}
+2026-03-21 22:10:25,802 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 22:10:25,802 - INFO - Semantic Layer applied. Enhanced query: total revenue by type
+2026-03-21 22:10:25,802 - INFO - Query tokens mapped to roles: revenue -> measure, type -> group
+2026-03-21 22:10:25,802 - INFO - Query tokens mapped to roles: revenue -> measure, type -> group
+2026-03-21 22:10:25,802 - INFO - Dynamic SQL Generator successful for: total revenue by type
+2026-03-21 22:10:26,004 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 22:10:26,005 - INFO - Semantic Layer applied. Enhanced query: average sales with discount
+2026-03-21 22:10:26,005 - INFO - Query tokens mapped to roles: sales -> measure, discount -> discount
+2026-03-21 22:10:26,005 - INFO - Query tokens mapped to roles: sales -> measure, discount -> discount
+2026-03-21 22:10:26,006 - INFO - Dynamic SQL Generator successful for: average sales with discount
+2026-03-21 22:10:26,006 - INFO - Dynamically Detected Schema: {'columns': ['exam_score', 'subject', 'passed_flag'], 'numeric': ['exam_score'], 'categorical': ['subject', 'passed_flag'], 'datetime': []}
+2026-03-21 22:10:26,006 - INFO - Robust Fallback Applied: measure -> exam_score (first numeric), group -> subject (first categorical), discount -> None
+2026-03-21 22:10:26,006 - INFO - Final Column Mapping: {'measure': 'exam_score', 'group': 'subject', 'discount': None}
+2026-03-21 22:10:26,106 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 22:10:26,108 - INFO - Semantic Layer applied. Enhanced query: average exam_score by subject
+2026-03-21 22:10:26,108 - INFO - Dynamic SQL Generator successful for: average exam_score by subject
+2026-03-21 22:10:26,204 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 22:10:26,205 - INFO - Semantic Layer applied. Enhanced query: percentage of students passed
+2026-03-21 22:10:26,205 - INFO - Dynamic SQL Generator successful for: percentage of students passed
+2026-03-21 22:10:26,207 - INFO - Dynamically Detected Schema: {'columns': ['exam_score', 'subject', 'passed_flag'], 'numeric': ['exam_score'], 'categorical': ['subject', 'passed_flag'], 'datetime': []}
+2026-03-21 22:10:26,207 - INFO - Robust Fallback Applied: measure -> exam_score (first numeric), group -> subject (first categorical), discount -> None
+2026-03-21 22:10:26,207 - INFO - Final Column Mapping: {'measure': 'exam_score', 'group': 'subject', 'discount': None}
+2026-03-21 22:10:26,207 - INFO - User manual override applied: {'measure': 'exam_score', 'group': 'passed_flag', 'discount': None}
+2026-03-21 22:10:26,299 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 22:10:26,300 - INFO - Semantic Layer applied. Enhanced query: total score by passed status
+2026-03-21 22:10:26,301 - INFO - Dynamic SQL Generator successful for: total score by passed status
+2026-03-21 22:10:26,547 - INFO - HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-03-21 22:10:26,549 - WARNING - BLOCKED: Invalid query detected: asdjkhaskjdh random gibberish

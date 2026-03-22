@@ -25,5 +25,41 @@
     "09d02d68f71ca4421115142781bbf355": {
         "sql": "SELECT * FROM ecommerce_behavior",
         "chart": "kpi"
+    },
+    "dfa62e30b2f5fa16f2f12179962a9f76": {
+        "sql": "SELECT purchase_category, SUM(purchase_amount::NUMERIC) \nFROM ecommerce_behavior \nGROUP BY purchase_category;",
+        "chart": "bar"
+    },
+    "336d13d2d5cec79b3d88a2f1a259c5e4": {
+        "sql": "SELECT AVG(purchase_amount::NUMERIC) FROM ecommerce_behavior WHERE LOWER(TRIM(COALESCE(discount_used, ''))) = 'yes'",
+        "chart": "kpi"
+    },
+    "fb1ad33ff942de05ddc82f04d123853d": {
+        "sql": "SELECT AVG(purchase_amount::NUMERIC) FROM ecommerce_behavior GROUP BY purchase_category",
+        "chart": "bar"
+    },
+    "15865ba0e3c3b899f4599cb29a3f699f": {
+        "sql": "SELECT (SUM(CASE WHEN LOWER(TRIM(COALESCE(discount_used, ''))) = 'yes' THEN 1 ELSE 0 END) * 100.0) / NULLIF(COUNT(*), 0) FROM ecommerce_behavior",
+        "chart": "pie"
+    },
+    "ebfbac95c8ccfe721470f547138081e5": {
+        "sql": "SELECT \n  purchase_category, \n  SUM(purchase_amount::NUMERIC) \nFROM \n  ecommerce_behavior \nWHERE \n  LOWER(TRIM(COALESCE(discount_used, ''))) = 'yes' \nGROUP BY \n  purchase_category;",
+        "chart": "bar"
+    },
+    "d9870d582d80f4f2b2116a2ea0b4e3cc": {
+        "sql": "SELECT SUM(purchase_amount::NUMERIC) \nFROM ecommerce_behavior \nWHERE LOWER(TRIM(COALESCE(discount_used, ''))) = 'yes';",
+        "chart": "kpi"
+    },
+    "ef6ea632d79b6d55052d51962955a212": {
+        "sql": "SELECT SUM(purchase_amount::NUMERIC) FROM ecommerce_behavior",
+        "chart": "kpi"
+    },
+    "4fdc451667af7d9ccf019452ceca2147": {
+        "sql": "SELECT \n  purchase_category, \n  SUM(purchase_amount::NUMERIC) AS purchase_amount\nFROM \n  ecommerce_behavior\nGROUP BY \n  purchase_category",
+        "chart": "bar"
+    },
+    "11ee8bc87374872184875f1cc6ba65c2": {
+        "sql": "SELECT purchase_category, SUM(purchase_amount::NUMERIC) AS purchase_amount FROM ecommerce_behavior GROUP BY purchase_category",
+        "chart": "bar"
     }
 }
