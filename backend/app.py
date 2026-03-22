@@ -248,28 +248,41 @@ def quick_interpret(query):
         "operation": operation
     }
 
-# Decoupled Synonym Mapping
-SYNONYM_MAP = {
-    "spending": get_metric_col(),
-    "revenue": get_metric_col(),
-    "sales": get_metric_col(),
-    "cost": get_metric_col(),
-    "items": get_category_col(),
-    "group": get_category_col(),
-    "city": get_location_col(),
-    "place": get_location_col(),
-    "rating": SCHEMA.get("numeric_columns", ["product_rating"])[1] if len(SCHEMA.get("numeric_columns", [])) > 1 else "product_rating",
-    "score": SCHEMA.get("numeric_columns", ["customer_satisfaction"])[-1] if SCHEMA.get("numeric_columns") else "customer_satisfaction"
-}
-
 def normalize_query(query):
     if not query:
         return query
     
     import re
+    active_mapping = get_active_mapping() or {}
+    active_schema = get_active_schema() or {}
+    active_columns = active_schema.get("columns", []) or []
+    numeric_cols = active_schema.get("numeric", active_schema.get("numeric_columns", [])) or []
+
+    location_col = next(
+        (col for col in active_columns if any(k in col.lower() for k in ["location", "city", "region", "state", "place"])),
+        get_location_col()
+    )
+    measure_col = active_mapping.get("measure") or get_metric_col(active_schema)
+    group_col = active_mapping.get("group") or get_category_col(active_schema)
+    rating_col = next((col for col in numeric_cols if col != measure_col), SCHEMA.get("numeric_columns", ["product_rating"])[1] if len(SCHEMA.get("numeric_columns", [])) > 1 else "product_rating")
+    score_col = next((col for col in reversed(numeric_cols) if col != measure_col), SCHEMA.get("numeric_columns", ["customer_satisfaction"])[-1] if SCHEMA.get("numeric_columns") else "customer_satisfaction")
+
+    synonym_map = {
+        "spending": measure_col,
+        "revenue": measure_col,
+        "sales": measure_col,
+        "cost": measure_col,
+        "items": group_col,
+        "group": group_col,
+        "city": location_col,
+        "place": location_col,
+        "rating": rating_col,
+        "score": score_col
+    }
+
     normalized = query
     # Sort synonyms by length to handle multi-word if any, or just single words
-    for word, actual in sorted(SYNONYM_MAP.items(), key=lambda x: len(x[0]), reverse=True):
+    for word, actual in sorted(synonym_map.items(), key=lambda x: len(x[0]), reverse=True):
         pattern = re.compile(rf'\b{re.escape(word)}\b', re.IGNORECASE)
         normalized = pattern.sub(actual, normalized)
     
