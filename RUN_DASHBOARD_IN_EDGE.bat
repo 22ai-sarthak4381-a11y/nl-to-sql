@@ -1,29 +1,39 @@
 @echo off
-:: This script starts the AI Business Dashboard and opens it specifically in Microsoft Edge.
+:: This script starts the AI Business Dashboard (Flask + React) and opens it in Microsoft Edge.
 
 echo ----------------------------------------------------
 echo 🚀 AI Business Insights Dashboard - Edge Launcher
 echo ----------------------------------------------------
 
-:: Kill any existing streamlit processes to avoid port conflicts
-taskkill /IM streamlit.exe /F 2>nul
+:: Navigate to backend and start Flask server
+echo Starting Flask backend on http://localhost:5000 ...
+start "Flask Backend" cmd /k "cd /d %~dp0backend && python app.py"
 
-echo Starting server in background...
-:: Use python -m streamlit to ensure the command is found correctly
-start /B python -m streamlit run dashboard.py --server.headless true
+:: Wait until Flask is listening on port 5000
+echo Waiting for Flask backend to be ready...
+:waitFlask
+timeout /t 2 /nobreak > nul
+netstat -an | find "0.0.0.0:5000" >nul 2>&1 || netstat -an | find "127.0.0.1:5000" >nul 2>&1
+if errorlevel 1 goto waitFlask
+echo Flask backend is ready.
 
-echo Waiting 5 seconds for server to initialize...
-timeout /t 5 /nobreak > nul
+:: Navigate to frontend and start React dev server
+echo Starting React frontend on http://localhost:5173 ...
+start "React Frontend" cmd /k "cd /d %~dp0frontend && npm run dev"
+
+:: Wait until React is listening on port 5173
+echo Waiting for React frontend to be ready...
+:waitReact
+timeout /t 2 /nobreak > nul
+netstat -an | find "0.0.0.0:5173" >nul 2>&1 || netstat -an | find "127.0.0.1:5173" >nul 2>&1
+if errorlevel 1 goto waitReact
+echo React frontend is ready.
 
 echo 🌐 Opening Dashboard in Microsoft Edge...
-start msedge "http://localhost:8501"
+start msedge "http://localhost:5173"
 
 echo.
-echo Dashboard is now running in your background!
-echo Keep this window open while using the dashboard.
-echo Press any key to stop the server and exit...
+echo Dashboard is now running!
+echo Close the Flask Backend and React Frontend windows to stop.
 pause > nul
-
-:: Clean up when the user types a key
-taskkill /IM streamlit.exe /F 2>nul
 exit
