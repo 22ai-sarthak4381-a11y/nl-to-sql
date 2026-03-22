@@ -239,10 +239,6 @@ def map_columns(schema_dict):
         except Exception as e:
             logger.error(f"ML Mapping Phase Error: {str(e)}")
 
-    # --- PHASE 2: Robust Fallback ---
-            if "discount" in c or "coupon" in c or "promo" in c:
-                mapping["discount"] = col
-
     # --- PHASE 2: Robust Fallback (If Step 1 fails) ---
     fallbacks_applied = []
     
